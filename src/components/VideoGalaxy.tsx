@@ -5,8 +5,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRef, useEffect, useLayoutEffect, useState } from "react";
 gsap.registerPlugin(ScrollTrigger);
 
-const FRAME_COUNT = 1579;
-const FRAME_PATH_PREFIX = "/frames2/frame_";
+const FRAME_COUNT = 500;
+const FRAME_PATH_PREFIX = "/frames/frame_";
 const FRAME_PATH_SUFFIX = ".webp";
 
 const getImagePath = (frame: number): string => {
@@ -63,7 +63,7 @@ const VideoGalaxy = () => {
             trigger: scrollTrack,
             start: "top top",
             end: "bottom bottom",
-            scrub:2,
+            scrub: 2,
           },
           ease: "none",
           onUpdate: () => {
