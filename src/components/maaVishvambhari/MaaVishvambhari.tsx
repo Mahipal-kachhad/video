@@ -2,7 +2,7 @@ import { Suspense } from "react";
 
 const MaaVishvambhari = () => {
   return (
-    <div className="pt-8 sm:pt-20 rounded-t-4xl bg-black">
+    <div className="pt-8 sm:pt-20 bg-black">
       <div className="w-5/6 sm:w-1/2 lg:w-2/5 mx-auto">
         <img
           src="/maa/Maa_Vishvambhari.png"

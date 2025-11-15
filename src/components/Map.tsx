@@ -1,8 +1,24 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { BsTelephoneFill } from "react-icons/bs";
 import { HiMail } from "react-icons/hi";
 import { MdLocationPin } from "react-icons/md";
 
 const Map = () => {
+  const [data, setData] = useState({
+    mobile: "",
+    office_hours: "",
+    email: "",
+  });
+
+  useEffect(() => {
+    axios
+      .get(" https://dhamadmin.cesihpl.com/edit_contact_info.php?action=list")
+      .then((data: any) => {
+        setData(data.data.items[0]);
+      });
+  }, []);
+
   return (
     <div className="w-full  bg-black flex items-center justify-center py-10 rounded-t-4xl sm:rounded-t-none">
       <div className="w-[85vw] max-w-7xl mx-auto flex flex-col sm:flex-row justify-between gap-7 rounded-xl lg:rounded-3xl">
@@ -21,10 +37,10 @@ const Map = () => {
                   Phone
                 </h4>
                 <p className="text-[0.9rem] sm:text-[0.7rem] lg:text-sm text-[#686868]">
-                  Mon-Fri From 8:00 AM to 5:00 PM
+                  {data.office_hours}
                 </p>
                 <p className="font-bold text-[1.1rem] sm:text-[0.75rem] lg:text-lg">
-                  +91 72030 25755
+                  {data.mobile}
                 </p>
               </div>
             </div>
@@ -40,7 +56,7 @@ const Map = () => {
                   Our Friendly Team is here to help.
                 </p>
                 <p className="font-bold text-[1.1rem] sm:text-[0.75rem] lg:text-lg">
-                  maavishvambhari@gmail.com
+                  {data.email}
                 </p>
               </div>
             </div>

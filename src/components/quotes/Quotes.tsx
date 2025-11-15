@@ -1,15 +1,36 @@
 "use client";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { SwiperRef } from "swiper/react";
 import { EffectCoverflow, Navigation } from "swiper/modules";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import items from "./quotesArray";
 import fadeUp from "../function";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 const Quotes = () => {
   const swiperRef = useRef<SwiperRef>(null);
+
+  const [items, setItems] = useState<{ content: string; image_path: string }[]>(
+    []
+  );
+
+  useEffect(() => {
+    axios
+      .get("https://dhamadmin.cesihpl.com/edit_quotes.php?action=list")
+      .then((data: any) => {
+        setItems(
+          data.data.quotes
+            .filter((val: any) => val.status === "1")
+            .map((val: any) => {
+              return {
+                content: val.content,
+                image_path: `https://dhamadmin.cesihpl.com/${val.image_path}`,
+              };
+            })
+        );
+      });
+  }, []);
 
   return (
     <div className="w-full py-5 xl:py-10 relative bg-black rounded-b-3xl sm:rounded-b-none sm:rounded-t-3xl">
@@ -50,7 +71,7 @@ const Quotes = () => {
                 >
                   <div className="relative">
                     <img
-                      src={card.imageSrc}
+                      src={card.image_path}
                       alt={`Card image ${idx + 1}`}
                       className="w-full h-auto object-cover rounded-md"
                     />
@@ -62,11 +83,11 @@ const Quotes = () => {
                   </div>
                   <div className="pt-4 text-center">
                     <p className="text-gray-700">
-                      <span className="font-semibold">{card.title}</span>{" "}
-                      {card.text}
+                      <span className="font-semibold">{idx + 1}.</span>{" "}
+                      {card.content}
                     </p>
                     <p className="text-right text-sm text-gray-500 mt-2">
-                      {card.author}
+                      શ્રી મહાપાત્ર
                     </p>
                   </div>
                 </div>

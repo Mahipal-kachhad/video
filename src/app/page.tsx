@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
 import AboutMVTY from "@/components/AboutMVTY";
-import BlurSlider from "@/components/BlurSlider";
+import BlurSlider from "@/components/GallerySlider";
 import Contact from "@/components/Contact";
 import Darshan from "@/components/Darshan";
 import Dham2 from "@/components/dham/Dham2";
@@ -18,13 +18,19 @@ import SreeVitthalbhai from "@/components/sreeVitthalbhai/SreeVitthalbhai";
 import VitthalbhaiBio from "@/components/sreeVitthalbhai/VitthalbhaiBio";
 import VideoGalaxy from "@/components/VideoGalaxy";
 import { Toaster } from "react-hot-toast";
+import gsap, { ScrollTrigger } from "gsap/all";
+import { useEffect } from "react";
 
-
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
+  useEffect(() => {
+    ScrollTrigger.refresh();
+  });
+
   return (
     <>
-      <VideoGalaxy />
+      {/* <VideoGalaxy /> */}
       <div className="bg-[#1D1D1F] min-h-screen">
         <AboutMVTY />
         <MaaVishvambhari />

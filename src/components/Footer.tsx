@@ -1,8 +1,23 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { BsTelephoneFill } from "react-icons/bs";
 import { HiMail } from "react-icons/hi";
 import { MdLocationPin } from "react-icons/md";
 
 const Footer = () => {
+  const [data, setData] = useState({
+    mobile: "",
+    office_hours: "",
+    email: "",
+  });
+
+  useEffect(() => {
+    axios
+      .get(" https://dhamadmin.cesihpl.com/edit_contact_info.php?action=list")
+      .then((data: any) => {
+        setData(data.data.items[0]);
+      });
+  }, []);
   return (
     <footer className="bg-black border-t border-t-white/10">
       <div className="flex flex-col sm:flex-row gap-7 w-[90vw] lg:items-center xl:items-start max-w-7xl mx-auto mt-10 pb-5 sm:pb-15 border-b border-b-white/10 ">
@@ -34,7 +49,10 @@ const Footer = () => {
           <div className="flex gap-3 items-center">
             <span>Follow us :</span>
             <div className="flex gap-5 text-[#FF8127] items-end">
-              <a href="https://www.youtube.com/@MVTYDham/streams" target="_blank">
+              <a
+                href="https://www.youtube.com/@MVTYDham/streams"
+                target="_blank"
+              >
                 <img src="/icons/tv.svg" alt="social media" />
               </a>
               <a href="https://www.youtube.com/@MVTYDham" target="_blank">
@@ -94,10 +112,10 @@ const Footer = () => {
             </div>
             <div>
               <p className="font-bold text-sm lg:text-lg xl:text-[1rem] text-[#cbcbcb]">
-                +91 72030 25755
+                {data.mobile}
               </p>
               <p className="text-[0.7rem] lg:text-sm text-[#686868]">
-                Mon-Fri From 8:00 AM to 5:00 PM
+                {data.office_hours}
               </p>
             </div>
           </div>
@@ -107,7 +125,7 @@ const Footer = () => {
             </div>
             <div>
               <p className="font-bold text-sm lg:text-lg xl:text-[1rem] text-[#cbcbcb] m-0 p-0">
-                maavishvambhari@gmail.com
+                {data.email}
               </p>
             </div>
           </div>

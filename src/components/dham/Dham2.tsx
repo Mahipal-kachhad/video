@@ -6,8 +6,8 @@ import { HiArrowLongRight } from "react-icons/hi2";
 import BlurPopup from "../BlurPopup";
 import { Swiper, SwiperRef, SwiperSlide } from "swiper/react";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
-import moreDetails from "./moreDetails";
 import axios from "axios";
+import { ScrollTrigger } from "gsap/all";
 
 const Dham2 = () => {
   const [images, setImages] = useState<{ url: string }[]>([
@@ -16,20 +16,38 @@ const Dham2 = () => {
     { url: "/dham/maa15.jpg" },
     { url: "/dham/maa11.jpg" },
     { url: "/dham/maa10.jpg" },
-    
   ]);
+  const [data, setData] = useState([""]);
 
   useEffect(() => {
     axios
       .get("https://dhamadmin.cesihpl.com/edit_dham_image.php?action=list")
       .then((data: any) => {
         setImages(
-          data.data.images[0].sub_images.map((val: any) => {
-            return {
-              url: `https://dhamadmin.cesihpl.com/${val.url}`,
-            };
-          })
+          data.data.images
+            .filter((val: any) => val.status)
+            .map((val: any) => {
+              return {
+                url: `https://dhamadmin.cesihpl.com/${val.url}`,
+              };
+            })
         );
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("https://dhamadmin.cesihpl.com/edit_dhamcontent.php?action=list")
+      .then((res: any) => {
+        const text = res.data.items[0].paragraphs[0] || "";
+        const lines = text
+          .split(/\r?\n/)
+          .map((line: string) => line.trim())
+          .filter((line: string) => line.length > 0);
+
+        setData(lines);
+      }).then(() => {
+        ScrollTrigger.refresh();
       });
   }, []);
 
@@ -48,33 +66,15 @@ const Dham2 = () => {
 
         <div className="flex gap-6 h-[55vw] items-center pt-20">
           <motion.div {...fadeUp()} className="h-fit ">
-            <p className="font-bold text-[#86868b] indent-23 sm:indent-50 text-justify leading-7 lg:leading-8 line-clamp-15 overflow-hidden">
-              On the western coast of India, in south of Gujarat state, to the
-              east of Valsad district there are lust green hill ranges of
-              Sahyadri and on West side howling Arabian Sea. There is green belt
-              of flower saplings and innumerable trees of Mango, Teak, banyan,
-              Kher etc. spreads over the fertile{" "}
-              <span className="text-white font-extrabold">land of Valsad</span>.
-              In south of Valsad,{" "}
-              <span className="text-white font-extrabold">'Par' river</span>{" "}
-              flows throughout the year, on its coast very beautiful villages
-              are situated. This land is{" "}
-              <span className="text-white font-extrabold">
-                Karmabhoomi (workplace) of Parshuram
-              </span>{" "}
-              - one of the ten incarnations of Lord Vishnu. This area possesses
-              incomparable charm of nature's beauty over the year. A wonder and{" "}
-              <span className="text-white font-extrabold">
-                divine Maa Vishvambhari TirthYatra Dham
-              </span>{" "}
-              is developed in{" "}
-              <span className="text-white font-extrabold">Rabda town</span>{" "}
-              which is located within heart soothing splendour of nature. This
-              world class and stupendous dham is constructed in{" "}
-              <span className="text-white font-extrabold">only 90 days</span>{" "}
-              and it is going to become center of ideological and spiritual
-              revolution for distributing them to entire world in near future.
-            </p>
+            <div className="space-y-5 line-clamp-15">
+              {data.map((val, idx) => (
+                <p
+                  className="font-bold text-[#86868b] indent-23 sm:indent-50 text-justify leading-7 lg:leading-8.5"
+                  key={idx}
+                  dangerouslySetInnerHTML={{ __html: val }}
+                />
+              ))}
+            </div>
 
             <p
               className="text-end text-[#FF8127] flex w-fit ms-auto gap-3 items-center pe-4 pt-5 cursor-pointer"
@@ -98,7 +98,10 @@ const Dham2 = () => {
                 className="h-[50vw]"
               >
                 {images.map((img, idx) => (
-                  <SwiperSlide key={idx} className="w-[35vw]! overflow-hidden rounded-2xl">
+                  <SwiperSlide
+                    key={idx}
+                    className="w-[35vw]! overflow-hidden rounded-2xl"
+                  >
                     <img
                       src={img.url}
                       alt={`Gallery image ${idx + 1}`}
@@ -132,13 +135,12 @@ const Dham2 = () => {
           <h2 className="text-3xl lg:text-[2.5rem] xl:text-[3.4rem] font-bold text-[#ff8127] text-center mb-5 uppercase">
             Maa Vishvambhari TirthYatra Dham
           </h2>
-          {moreDetails.map((val, idx) => (
+          {data.map((val, idx) => (
             <p
+              className="font-bold text-[#86868b] indent-23 sm:indent-50 pb-5 text-justify leading-7 lg:leading-8"
               key={idx}
-              className="pb-3 text-justify leading-7 lg:leading-8 indent-25"
-            >
-              {val}
-            </p>
+              dangerouslySetInnerHTML={{ __html: val }}
+            />
           ))}
         </BlurPopup>
       </div>

@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 
 import { FaPause, FaPlay } from "react-icons/fa";
 import fadeUp from "./function";
+import axios from "axios";
 
 const AboutMVTY = () => {
   const [images, setImages] = useState([
@@ -17,14 +18,31 @@ const AboutMVTY = () => {
     { url: "/dham/patr15.jpg" },
   ]);
 
-  const imagesMobile = [
+  const [imagesMobile, setImagesMobile] = useState([
     { url: "/maa/maaM1.jpg" },
     { url: "/maa/maaM2.jpg" },
     { url: "/maa/patrM1.jpg" },
     { url: "/maa/patrM2.jpg" },
     { url: "/maa/dhamM1.jpg" },
     { url: "/maa/dhamM2.jpg" },
-  ];
+  ]);
+
+  useEffect(() => {
+    axios
+      .get("https://dhamadmin.cesihpl.com/edit_home.php?action=list")
+      .then((data: any) => {
+        setImages(
+          data.data.images
+            .filter((val: any) => val.status)
+            .map((val: any) => ({
+              url: `https://dhamadmin.cesihpl.com/${val.url}`,
+            }))
+        );
+      })
+      .then(() => {
+        setImagesMobile(images);
+      });
+  }, []);
 
   useEffect(() => {
     if (window.innerWidth < 640) {
@@ -109,20 +127,19 @@ const AboutMVTY = () => {
             </SwiperSlide>
           ))}
         </Swiper>
-      </div>
-
-      <div className="sticky bottom-0 z-10 py-10">
-        <div className="flex items-center justify-center mt-5 gap-4">
-          <button
-            onClick={handlePlayPause}
-            className="p-5 rounded-full backdrop-blur-md bg-[rgba(42,42,45,0.72)] text-[#ffffff] font-medium transition"
-          >
-            {isPlaying ? <FaPause /> : <FaPlay />}
-          </button>
-          <div
-            className="p-6 rounded-full gap-4 about-mvty-pagination flex items-center bg-[rgba(42,42,45,0.72)] backdrop-blur-md text-[#b3b3b3] font-medium  transition w-fit!"
-            ref={paginationRef}
-          />
+        <div className="sticky bottom-0 z-10 py-10">
+          <div className="flex items-center justify-center mt-5 gap-4">
+            <button
+              onClick={handlePlayPause}
+              className="p-5 rounded-full backdrop-blur-md bg-[rgba(42,42,45,0.72)] text-[#ffffff] font-medium transition"
+            >
+              {isPlaying ? <FaPause /> : <FaPlay />}
+            </button>
+            <div
+              className="p-6 rounded-full gap-4 about-mvty-pagination flex items-center bg-[rgba(42,42,45,0.72)] backdrop-blur-md text-[#b3b3b3] font-medium  transition w-fit!"
+              ref={paginationRef}
+            />
+          </div>
         </div>
       </div>
 
