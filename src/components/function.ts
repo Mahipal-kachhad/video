@@ -1,3 +1,4 @@
+"use client";
 import { MotionProps } from "framer-motion";
 
 const fadeUp = (delay = 0): MotionProps => ({

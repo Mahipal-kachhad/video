@@ -1,3 +1,4 @@
+"use client";
 const SreeVitthalbhai = () => {
   return (
     <div className="bg-black ">

@@ -1,3 +1,4 @@
+"use client";
 import { HiArrowLongRight } from "react-icons/hi2";
 import BlurPopup from "../BlurPopup";
 import { useEffect, useState } from "react";

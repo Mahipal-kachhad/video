@@ -1,3 +1,4 @@
+"use client";
 import { useGSAP } from "@gsap/react";
 import axios from "axios";
 import gsap from "gsap";

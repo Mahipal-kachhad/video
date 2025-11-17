@@ -77,6 +77,7 @@ const Events = () => {
           setData((prev) => ({
             ...prev,
             url: res.data.items[0].link_url,
+            img: res.data.items[0].image_path,
           }));
         }
       })
@@ -212,18 +213,53 @@ const Events = () => {
                             "Click below to join the event."
                           </p>
                           <a
-                            href={data.url || "#"}
+                            href={data.url}
                             target="_blank"
-                            rel="noreferrer noopener"
-                            className="px-7 py-2 mx-auto xl:mx-0 block text-[0.8rem] text-[#FF8127] font-bold rounded-full bg-[#ff8127]/10 hover:bg-[#ff8127]/20 active:bg-[#ff8127]/5 transition ease-in cursor-pointer border-t border-t-white/20 border-l border-l-white/20"
+                            className="px-7 w-fit py-2 mx-auto xl:mx-0 block text-[0.8rem] text-[#FF8127] font-bold rounded-full bg-[#ff8127]/10 hover:bg-[#ff8127]/20 active:bg-[#ff8127]/5 transition ease-in cursor-pointer border-t border-t-white/20 border-l border-l-white/20"
                           >
                             Participate
                           </a>
-
+                          <div className="flex xl:block gap-3 items-center py-3 xl:py-0 mx-auto xl:mx-0 w-fit event">
+                            <p className="py-2 sm:text-sm text-neutral-500">
+                              Join us live on:
+                            </p>
+                            <div className="flex gap-3 lg:gap-5 text-[#FF8127] items-end">
+                              <a
+                                href="https://www.youtube.com/@MVTYDham/streams"
+                                target="_blank"
+                              >
+                                <img src="/icons/tv.svg" alt="social media" />
+                              </a>
+                              <a
+                                href="https://www.youtube.com/@MVTYDham"
+                                target="_blank"
+                              >
+                                <img
+                                  src="/icons/youtube.svg"
+                                  alt="social media"
+                                />
+                              </a>
+                              <a
+                                href="https://www.instagram.com/mvtydham/"
+                                target="_blank"
+                              >
+                                <img
+                                  src="/icons/instagram2.svg"
+                                  alt="social media"
+                                />
+                              </a>
+                              <a
+                                href="https://www.facebook.com/MVTYDham/"
+                                target="_blank"
+                              >
+                                <img src="/icons/face.svg" alt="social media" />
+                              </a>
+                            </div>
+                          </div>
                           <img
-                            src={toSrc(img1)}
-                            alt="live mobile"
-                            className="xl:hidden my-7 rounded-xl w-full object-cover"
+                            src="/dham/event1.jpg"
+                            className="xl:hidden my-7 rounded-xl"
+                            alt="event"
                           />
                         </div>
                       )}
@@ -288,7 +324,7 @@ const Events = () => {
                                   className={`text-[#FF8127] xl:text-lg cursor-pointer ${
                                     selectedPast === i
                                       ? "opacity-100"
-                                      : "opacity-80"
+                                      : "opacity-100"
                                   }`}
                                 >
                                   {event.title} ({event.date})

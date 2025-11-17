@@ -1,3 +1,4 @@
+"use client";
 import { Dialog } from "@headlessui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ReactNode } from "react";
