@@ -1,80 +1,165 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiChevronDown } from "react-icons/fi";
+import axios from "axios";
+import img1 from "../../public/dham/event1.jpg";
+import BlurPopup from "./BlurPopup";
+import { Dialog } from "@headlessui/react";
+import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
 
 const accordionData = [
-  {
-    title: "Live Satsang & Events",
-    content: [
-      "Join Maa's divine presence right now. The live broadcast is happening as we speak.",
-    ],
-  },
-  {
-    title: "Upcoming Events",
-    content: [
-      "Akhatrij (30-4-2026)",
-      "Vaishakh Sud Punam (12-5-2026)",
-      "Jeth Sud Punam (11-6-2026)",
-      "Rathyatra Ashadhi Bij (27-6-2026)",
-      "Guru Purnima (10-7-2026)",
-    ],
-  },
-  {
-    title: "List Of Celebrated Events",
-    content: [
-      "Akhatrij Event 2019",
-      "Chaitra Navaratri Event 2021",
-      "Akhatrij Event 2022",
-      "Chaitra Navaratri Event 2022",
-      "Utrayan Event 2023",
-      "Vaishakh Sud Punam (12-5-2025)",
-      "Jeth Sud Punam (11-6-2025)",
-    ],
-  },
+  { title: "Live Satsang & Events" },
+  { title: "Upcoming Events" },
+  { title: "List Of Celebrated Events" },
 ];
 
-const imageArray = [
-  { url: "/dham/event1.jpg" },
-  { url: "/dham/event2.jpg" },
-  { url: "/dham/event2.jpg" },
-];
+type UpcomingItem = { image: string; title: string; date: string };
+type PastItem = {
+  image: string;
+  title: string;
+  date: string;
+  images: { url: string }[];
+};
+
+const toSrc = (img: any) => (typeof img === "string" ? img : img?.src ?? "");
 
 const Events = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(1);
   const [isMobile, setIsMobile] = useState(false);
 
+  const [selectedUpcoming, setSelectedUpcoming] = useState<number>(0);
+  const [selectedPast, setSelectedPast] = useState<number>(0);
+
+  const [data, setData] = useState<{
+    url: string;
+    upcoming: UpcomingItem[];
+    past: PastItem[];
+  }>({
+    url: "",
+    upcoming: [],
+    past: [],
+  });
+
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupImages, setPopupImages] = useState<{ url: string }[]>([]);
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const [viewerIndex, setViewerIndex] = useState(0);
+
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 639px)");
-
     const handleResize = () => {
       setIsMobile(mediaQuery.matches);
-      if (!mediaQuery.matches && openIndex === null) {
-        setOpenIndex(0);
-      }
+      if (!mediaQuery.matches && openIndex === null) setOpenIndex(0);
     };
-
     handleResize();
-
     mediaQuery.addEventListener("change", handleResize);
-
-    return () => {
-      mediaQuery.removeEventListener("change", handleResize);
-    };
+    return () => mediaQuery.removeEventListener("change", handleResize);
   }, [openIndex]);
 
   const handleToggle = (index: number) => {
     if (isMobile) {
-      if (openIndex === index) {
-        const nextIndex = (index + 1) % accordionData.length;
-        setOpenIndex(nextIndex);
-      } else {
-        setOpenIndex(index);
-      }
+      if (openIndex === index) setOpenIndex((index + 1) % accordionData.length);
+      else setOpenIndex(index);
     } else {
       setOpenIndex(index);
     }
   };
+
+  useEffect(() => {
+    axios
+      .get(
+        "https://dhamadmin.cesihpl.com/edit_event_participant_link.php?action=list"
+      )
+      .then((res: any) => {
+        if (res.data.items?.[0]?.is_active) {
+          setData((prev) => ({
+            ...prev,
+            url: res.data.items[0].link_url,
+          }));
+        }
+      })
+      .catch(() => {});
+
+    axios
+      .get(
+        "https://dhamadmin.cesihpl.com/edit_upcoming_event_details.php?action=list"
+      )
+      .then((res: any) => {
+        const upcoming =
+          (res.data.images || [])
+            .filter((val: any) => val.is_active)
+            .map((val: any) => ({
+              image: `https://dhamadmin.cesihpl.com/${val.image_path}`,
+              title: val.title,
+              date: val.event_date,
+            })) || [];
+        setData((prev) => ({ ...prev, upcoming }));
+        setSelectedUpcoming((s) =>
+          upcoming.length ? Math.min(s, upcoming.length - 1) : 0
+        );
+      })
+      .catch(() => {});
+
+    axios
+      .get("https://dhamadmin.cesihpl.com/edit_event_details.php?action=list")
+      .then((res: any) => {
+        const past =
+          (res.data.images || [])
+            .filter((val: any) => val.is_active)
+            .map((val: any) => ({
+              image: `https://dhamadmin.cesihpl.com/${val.image_path}`,
+              title: val.title,
+              date: val.event_date,
+              images:
+                (val.sub_images || [])
+                  .filter((v: any) => v.status)
+                  .map((v: any) => ({
+                    url: `https://dhamadmin.cesihpl.com${v.url}`,
+                  })) || [],
+            })) || [];
+        setData((prev) => ({ ...prev, past }));
+        setSelectedPast((s) =>
+          past.length ? Math.min(s, past.length - 1) : 0
+        );
+      })
+      .catch(() => {});
+  }, []);
+
+  const rightImageSrc =
+    openIndex === 0
+      ? toSrc(img1)
+      : openIndex === 1
+      ? data.upcoming[selectedUpcoming]?.image || toSrc(img1)
+      : data.past[selectedPast]?.image || toSrc(img1);
+
+  const openPastPopup = (index: number) => {
+    const images = data.past[index]?.images || [];
+    setPopupImages(images);
+    setIsPopupOpen(true);
+    setViewerIndex(0);
+  };
+
+  const nextImage = () =>
+    setViewerIndex((p) =>
+      popupImages.length ? (p + 1) % popupImages.length : 0
+    );
+  const prevImage = () =>
+    setViewerIndex((p) =>
+      popupImages.length ? (p === 0 ? popupImages.length - 1 : p - 1) : 0
+    );
+
+  useEffect(() => {
+    if (!isViewerOpen) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") nextImage();
+      if (e.key === "ArrowLeft") prevImage();
+      if (e.key === "Escape") setIsViewerOpen(false);
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [isViewerOpen, popupImages]);
 
   return (
     <div className="h-fit w-full flex items-center justify-center sm:py-15 ">
@@ -84,7 +169,7 @@ const Events = () => {
             const isOpen = openIndex === idx;
             return (
               <div
-                key={item.title}
+                key={idx}
                 className="border-b border-neutral-800 last:border-b-0"
               >
                 <button
@@ -106,7 +191,7 @@ const Events = () => {
                 <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.div
-                      key="content"
+                      key={`content-${idx}`}
                       initial="collapsed"
                       animate="open"
                       exit="collapsed"
@@ -117,7 +202,7 @@ const Events = () => {
                       transition={{ duration: 0.3, ease: "easeInOut" }}
                       className="overflow-hidden"
                     >
-                      {idx === 0 ? (
+                      {idx === 0 && (
                         <div className="pb-2 lg:pb-4 text-neutral-300">
                           <p className="text-[#FF8127] text-justify w-9/10 sm:text-center mx-auto xl:mx-0 xl:w-full xl:text-left text-[1.1rem] xl:text-sm">
                             Join Maa's divine presence right now. The live
@@ -126,71 +211,111 @@ const Events = () => {
                           <p className="text-center xl:text-left py-3 sm:py-2 lg:py-3 text-[1.1rem] sm:text-[0.8rem]">
                             "Click below to join the event."
                           </p>
-                          <button className="px-7 py-2 mx-auto xl:mx-0 block text-[0.8rem] text-[#FF8127] font-bold rounded-full bg-[#ff8127]/10 hover:bg-[#ff8127]/20 active:bg-[#ff8127]/5 transition ease-in cursor-pointer border-t border-t-white/20 border-l border-l-white/20">
+                          <a
+                            href={data.url || "#"}
+                            target="_blank"
+                            rel="noreferrer noopener"
+                            className="px-7 py-2 mx-auto xl:mx-0 block text-[0.8rem] text-[#FF8127] font-bold rounded-full bg-[#ff8127]/10 hover:bg-[#ff8127]/20 active:bg-[#ff8127]/5 transition ease-in cursor-pointer border-t border-t-white/20 border-l border-l-white/20"
+                          >
                             Participate
-                          </button>
-                          <div className="flex xl:block gap-3 items-center py-3 xl:py-0 mx-auto xl:mx-0 w-fit event">
-                            <p className="py-2 sm:text-sm text-neutral-500">
-                              Join us live on:
-                            </p>
-                            <div className="flex gap-3 lg:gap-5 text-[#FF8127] items-end">
-                              <a
-                                href="https://www.youtube.com/@MVTYDham/streams"
-                                target="_blank"
-                              >
-                                <img src="/icons/tv.svg" alt="social media" />
-                              </a>
-                              <a
-                                href="https://www.youtube.com/@MVTYDham"
-                                target="_blank"
-                              >
-                                <img
-                                  src="/icons/youtube.svg"
-                                  alt="social media"
-                                />
-                              </a>
-                              <a
-                                href="https://www.instagram.com/mvtydham/"
-                                target="_blank"
-                              >
-                                <img
-                                  src="/icons/instagram2.svg"
-                                  alt="social media"
-                                />
-                              </a>
-                              <a
-                                href="https://www.facebook.com/MVTYDham/"
-                                target="_blank"
-                              >
-                                <img
-                                  src="/icons/face.svg"
-                                  alt="social media"
-                                />
-                              </a>
-                            </div>
-                          </div>
+                          </a>
+
                           <img
-                            src="/dham/event1.jpg"
-                            className="xl:hidden my-7 rounded-xl"
-                            alt="event"
+                            src={toSrc(img1)}
+                            alt="live mobile"
+                            className="xl:hidden my-7 rounded-xl w-full object-cover"
                           />
                         </div>
-                      ) : (
-                        <ol className="list-decimal list-inside pl-2 pb-4 text-neutral-400 space-y-1">
-                          {item.content.map((event) => (
-                            <li
-                              className="text-[#FF8127] xl:text-lg"
-                              key={event}
-                            >
-                              {event}
-                            </li>
-                          ))}
-                          <img
-                            src="/dham/event2.jpg"
-                            className="xl:hidden my-7 rounded-xl"
-                            alt="event"
-                          />
-                        </ol>
+                      )}
+
+                      {idx === 1 && (
+                        <div>
+                          <ol className="list-decimal list-inside pl-2 pb-4 text-neutral-400 space-y-1">
+                            {data.upcoming.length === 0 ? (
+                              <li className="text-neutral-500">
+                                No upcoming events.
+                              </li>
+                            ) : (
+                              data.upcoming.map((event, i) => (
+                                <li
+                                  key={i}
+                                  onClick={() => setSelectedUpcoming(i)}
+                                  className={`text-[#FF8127] xl:text-lg cursor-pointer ${
+                                    selectedUpcoming === i
+                                      ? "opacity-100"
+                                      : "opacity-80"
+                                  }`}
+                                >
+                                  {event.title} ({event.date})
+                                </li>
+                              ))
+                            )}
+                          </ol>
+
+                          <div className="xl:hidden my-4">
+                            {data.upcoming[selectedUpcoming]?.image ? (
+                              <img
+                                src={data.upcoming[selectedUpcoming].image}
+                                alt="upcoming mobile"
+                                className="w-full rounded-xl object-cover"
+                              />
+                            ) : (
+                              <img
+                                src={toSrc(img1)}
+                                alt="upcoming placeholder"
+                                className="w-full rounded-xl object-cover"
+                              />
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {idx === 2 && (
+                        <div>
+                          <ol className="list-decimal list-inside pl-2 pb-4 text-neutral-400 space-y-1">
+                            {data.past.length === 0 ? (
+                              <li className="text-neutral-500">
+                                No past events.
+                              </li>
+                            ) : (
+                              data.past.map((event, i) => (
+                                <li
+                                  key={i}
+                                  onClick={() => {
+                                    setSelectedPast(i);
+                                    openPastPopup(i);
+                                  }}
+                                  className={`text-[#FF8127] xl:text-lg cursor-pointer ${
+                                    selectedPast === i
+                                      ? "opacity-100"
+                                      : "opacity-80"
+                                  }`}
+                                >
+                                  {event.title} ({event.date})
+                                </li>
+                              ))
+                            )}
+                          </ol>
+
+                          <div className="xl:hidden my-4">
+                            {data.past[selectedPast]?.image ? (
+                              <img
+                                src={data.past[selectedPast].image}
+                                alt="past mobile"
+                                className="w-full rounded-xl object-cover cursor-pointer"
+                                onClick={() => {
+                                  openPastPopup(selectedPast);
+                                }}
+                              />
+                            ) : (
+                              <img
+                                src={toSrc(img1)}
+                                alt="past placeholder"
+                                className="w-full rounded-xl object-cover"
+                              />
+                            )}
+                          </div>
+                        </div>
                       )}
                     </motion.div>
                   )}
@@ -199,23 +324,94 @@ const Events = () => {
             );
           })}
         </div>
+
         <div className="hidden xl:block w-full h-fit object-cover">
-          {openIndex !== null && (
-            <AnimatePresence mode="wait">
-              <motion.img
-                key={openIndex}
-                src={imageArray[openIndex].url}
-                alt="dham events images"
-                className="rounded-2xl w-full object-cover"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-              />
-            </AnimatePresence>
-          )}
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={`${openIndex ?? 0}-${selectedUpcoming}-${selectedPast}`}
+              src={rightImageSrc}
+              alt="dham events images"
+              className="rounded-2xl w-full object-cover"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+            />
+          </AnimatePresence>
         </div>
       </div>
+
+      <BlurPopup isOpen={isPopupOpen} setIsOpen={setIsPopupOpen}>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          {popupImages.length === 0 ? (
+            <p className="text-center text-neutral-400 col-span-full">
+              No images available
+            </p>
+          ) : (
+            popupImages.map((img, i) => (
+              <img
+                key={i}
+                src={img.url}
+                className="w-full h-full object-cover rounded-xl cursor-pointer"
+                alt={`gallery ${i}`}
+                onClick={() => {
+                  setViewerIndex(i);
+                  setIsViewerOpen(true);
+                }}
+              />
+            ))
+          )}
+        </div>
+      </BlurPopup>
+
+      <AnimatePresence>
+        {isViewerOpen && (
+          <Dialog
+            as="div"
+            open={isViewerOpen}
+            onClose={() => setIsViewerOpen(false)}
+            className="fixed inset-0 z-100 flex items-center justify-center"
+          >
+            <motion.div
+              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+
+            <motion.img
+              key={viewerIndex}
+              src={popupImages[viewerIndex]?.url}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.25 }}
+              className="relative z-120 max-w-[90vw] max-h-[90vh] object-contain rounded-xl"
+            />
+
+            <button
+              onClick={prevImage}
+              className="absolute left-5 top-1/2 -translate-y-1/2 z-130 cursor-pointer hover:text-gray-300 text-white p-2 rounded-full text-3xl"
+            >
+              <FaCaretLeft />
+            </button>
+
+            <button
+              onClick={nextImage}
+              className="absolute right-5 top-1/2 -translate-y-1/2 z-130 cursor-pointer hover:text-gray-300 text-white p-2 rounded-full text-3xl"
+            >
+              <FaCaretRight />
+            </button>
+
+            <button
+              onClick={() => setIsViewerOpen(false)}
+              className="absolute top-5 right-5 z-130 bg-white text-black p-2 rounded-full text-2xl"
+            >
+              <IoClose />
+            </button>
+          </Dialog>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

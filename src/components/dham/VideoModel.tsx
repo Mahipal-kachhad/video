@@ -50,7 +50,7 @@ const VideoModel = () => {
     axios
       .get("https://dhamadmin.cesihpl.com/edit_videos.php?action=list")
       .then((data: any) => {
-        if (data.data.video[0].status)
+        if (data.data.videos[0]?.status)
           setVideo(`https://dhamadmin.cesihpl.com/${data.data.videos[0].url}`);
       });
   }, []);
@@ -62,14 +62,21 @@ const VideoModel = () => {
     >
       <div className="w-full h-fit sm:h-[370px] lg:h-[450px] xl:h-[580px] 2xl:h-screen sticky bottom-0 flex items-center justify-center overflow-hidden">
         <div className="w-9/10 sm:w-7/10 h-fit relative" ref={divRef}>
-          <div className="w-full p-1">            
-            {video ? <video
-              src={video}
-              className="rounded-[6vw] w-full"
-              muted
-              autoPlay
-              loop
-            /> : <img src={"/icons/fallbackVideo.jpg"} className="rounded-[6vw] w-full" />}
+          <div className="w-full p-1">
+            {video ? (
+              <video
+                src={video}
+                className="rounded-[6vw] w-full"
+                muted
+                autoPlay
+                loop
+              />
+            ) : (
+              <img
+                src={"/icons/fallbackVideo.jpg"}
+                className="rounded-[6vw] w-full"
+              />
+            )}
           </div>
           <div className=" w-full absolute left-0 top-0">
             <img src="/icons/phone.png" alt="phone image" />
