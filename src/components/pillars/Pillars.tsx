@@ -11,6 +11,7 @@ import { BsPatchPlusFill } from "react-icons/bs";
 import DetailedSlider from "./DetailedSlider";
 import axios from "axios";
 import { useTranslations } from "next-intl";
+import { usePathname } from "next/navigation";
 
 interface Pillar {
   title: string;
@@ -20,12 +21,15 @@ interface Pillar {
 }
 
 const Pillars = () => {
-  const t = useTranslations()
+  const pathName = usePathname();
+  const lang = pathName.split("/")[1] || "en";
+  const path = lang === "hi" ? "_hin" : lang === "gu" ? "_guj" : "";
+  const t = useTranslations();
   const [pillarsContent, setPillarContent] = useState<Pillar[]>([]);
 
   useEffect(() => {
     axios
-      .get("https://dhamadmin.cesihpl.com/edit_pillars.php?action=list")
+      .get(`https://dhamadmin.cesihpl.com/edit_pillars${path}.php?action=list`)
       .then((data: any) => {
         setPillarContent(
           data.data.pillars.map((val: any) => {

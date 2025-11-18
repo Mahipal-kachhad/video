@@ -8,9 +8,13 @@ import fadeUp from "../function";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useTranslations } from "next-intl";
+import { usePathname } from "next/navigation";
 
 const Quotes = () => {
-  const t = useTranslations()
+  const pathName = usePathname();
+  const lang = pathName.split("/")[1] || "en";
+  const path = lang === "hi" ? "_hin" : lang === "gu" ? "_guj" : "";
+  const t = useTranslations();
   const swiperRef = useRef<SwiperRef>(null);
 
   const [items, setItems] = useState<{ content: string; image_path: string }[]>(
@@ -19,7 +23,7 @@ const Quotes = () => {
 
   useEffect(() => {
     axios
-      .get("https://dhamadmin.cesihpl.com/edit_quotes.php?action=list")
+      .get(`https://dhamadmin.cesihpl.com/edit_quotes${path}.php?action=list`)
       .then((data: any) => {
         setItems(
           data.data.quotes
@@ -89,7 +93,7 @@ const Quotes = () => {
                       {card.content}
                     </p>
                     <p className="text-right text-sm text-gray-500 mt-2">
-                      શ્રી મહાપાત્ર
+                      {t("mahapatra")}
                     </p>
                   </div>
                 </div>

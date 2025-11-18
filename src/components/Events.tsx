@@ -9,6 +9,7 @@ import { Dialog } from "@headlessui/react";
 import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { useTranslations } from "next-intl";
+import { usePathname } from "next/navigation";
 
 type UpcomingItem = { image: string; title: string; date: string };
 type PastItem = {
@@ -22,7 +23,9 @@ const toSrc = (img: any) => (typeof img === "string" ? img : img?.src ?? "");
 
 const Events = () => {
   const t = useTranslations();
-
+  const pathName = usePathname();
+  const lang = pathName.split("/")[1] || "en";
+  const path = lang === "hi" ? "_hin" : lang === "gu" ? "_guj" : "";
   const accordionData = [
     { title: t("events.t1") },
     { title: t("events.t2") },
@@ -87,7 +90,7 @@ const Events = () => {
 
     axios
       .get(
-        "https://dhamadmin.cesihpl.com/edit_upcoming_event_details.php?action=list"
+        `https://dhamadmin.cesihpl.com/edit_upcoming_event_details${path}.php?action=list`
       )
       .then((res: any) => {
         const upcoming =
@@ -106,7 +109,9 @@ const Events = () => {
       .catch(() => {});
 
     axios
-      .get("https://dhamadmin.cesihpl.com/edit_event_details.php?action=list")
+      .get(
+        `https://dhamadmin.cesihpl.com/edit_event_details${path}.php?action=list`
+      )
       .then((res: any) => {
         const past =
           (res.data.images || [])
@@ -207,10 +212,10 @@ const Events = () => {
                     >
                       {idx === 0 && (
                         <div className="pb-2 lg:pb-4 text-neutral-300">
-                          <p className="text-[#FF8127] text-justify w-9/10 sm:text-center mx-auto xl:mx-0 xl:w-full xl:text-left text-[1.1rem] xl:text-sm">
+                          <p className="text-[#FF8127] text-justify w-9/10 xl:text-lg sm:text-center mx-auto xl:mx-0 xl:w-full xl:text-left text-[1.1rem]">
                             {t("events.p1")}
                           </p>
-                          <p className="text-center xl:text-left py-3 sm:py-2 lg:py-3 text-[1.1rem] sm:text-[0.8rem]">
+                          <p className="text-center xl:text-left py-3 sm:py-2 lg:py-3 text-[1.1rem] sm:text-[0.9rem]">
                             {t("events.p2")}
                           </p>
                           <a

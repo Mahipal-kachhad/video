@@ -12,7 +12,7 @@
     "dham": "Maa Vishvambhari TirthYatra Dham",
     "pillars": "explore our pillars",
     "gallery": "Photo Gallery",
-    "quotes": "Quotes by Mahapatra"
+    "quotes": "\"Quotes by Mahapatra\""
   },
   "events": {
     "t1": "Live Satsang & Events",
@@ -61,7 +61,15 @@
     "l2": "Events & Satsang",
     "l3": "Photo Gallery",
     "l4": "Location & Contact",
-    "l5": "Our pillars"
+    "l5": "Our pillars",
+    "copy1": "Maa Vishvambhari TirthYatra Dham.",
+    "copy2": "All rights reserved.",
+    "terms": "Terms of Service",
+    "policy": "Privacy Policy",
+    "disc": "Disclaimer",
+    "add1": "Rabada - 396055",
+    "add2": "Ta. & Dist. Valsad (Guj-IND)"
   },
-  "viewMore":"View More"
+  "viewMore": "View More",
+  "mahapatra": "Shri Mahapatra"
 }

@@ -90,18 +90,18 @@ const Footer = () => {
             href="#"
             className="text-[#cbcbcb] hover:text-[#ff8127] transition ease-in-out"
           >
-           {t("l4")}
+            {t("l4")}
           </a>
           <a
             href="#"
             className="text-[#cbcbcb] hover:text-[#ff8127] transition ease-in-out"
           >
-            {t("l4")}
+            {t("l5")}
           </a>
         </div>
         <div className="w-full sm:w-md ps-10 sm:p-0!">
           <h3 className="text-xl font-bold mb-3 text-md lg:text-lg xl:text-xl text-[#ff8127] uppercase">
-           {t("contact")}
+            {t("contact")}
           </h3>
           <div className="flex gap-2 py-1 lg:py-3">
             <div className="p-2">
@@ -132,10 +132,10 @@ const Footer = () => {
             </div>
             <div>
               <p className="font-bold text-sm lg:text-lg xl:text-[1rem] text-[#cbcbcb]">
-                Rabada - 396055
+                {t("add1")}
               </p>
               <p className=" text-[0.7rem] lg:text-sm text-[#686868]">
-                Ta. & Dist. Valsad (Guj-IND)
+                {t("add2")}
               </p>
             </div>
           </div>
@@ -143,18 +143,17 @@ const Footer = () => {
       </div>
       <div className="flex flex-col lg:flex-row space-y-5 lg:space-y-0 justify-between items-center w-[90vw] max-w-7xl mx-auto py-10 text-sm lg:text-lg xl:text-[1rem]">
         <p className="text-center sm:text-left">
-          © 2025 Maa Vishvambhari TirthYatra Dham. <br className="sm:hidden" />{" "}
-          All rights reserved.
+          © 2025 {t("copy1")} <br className="sm:hidden" /> {t("copy2")}
         </p>
         <div className="flex gap-7 text-[#898989]">
           <a href="#" className="hover:text-[#ff8127] transition ease-in-out">
-            Privacy Policy
+            {t("policy")}
           </a>
           <a href="#" className="hover:text-[#ff8127] transition ease-in-out">
-            Terms of Service
+            {t("terms")}
           </a>
           <a href="#" className="hover:text-[#ff8127] transition ease-in-out">
-            Disclaimer
+            {t("disc")}
           </a>
         </div>
       </div>

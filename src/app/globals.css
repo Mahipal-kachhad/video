@@ -17,3 +17,50 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@font-face {
+  font-family: "CustomDevanagari";
+  src: url("/fonts/devnagari-1/NotoSansDevanagari-VariableFont_wdth,wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "CustomDevanagari";
+  src: url("/fonts/devnagari-1/NotoSansDevanagari-VariableFont_wdth,wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "CustomGujarati";
+  src: url("/fonts/Anek_Gujarati/AnekGujarati-VariableFont_wdth,wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "CustomGujarati";
+  src: url("/fonts/Anek_Gujarati/AnekGujarati-VariableFont_wdth,wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+html[lang="hi"],
+html[lang="hi"] body {
+  font-family: "CustomDevanagari", "Noto Sans Devanagari", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+html[lang="gu"],
+html[lang="gu"] body {
+  font-family: "CustomGujarati", "Noto Sans Gujarati", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+html[lang="en"],
+html[lang="en"] body {
+  font-family: Arial, Helvetica, sans-serif;
+}

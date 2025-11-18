@@ -1,10 +1,14 @@
 "use client";
 import axios from "axios";
 import { useTranslations } from "next-intl";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Darshan = () => {
   const t = useTranslations();
+  const pathName = usePathname();
+  const lang = pathName.split("/")[1] || "en";
+  const path = lang === "hi" ? "_hin" : lang === "gu" ? "_guj" : "";
   const [data, setData] = useState({
     schedule_line1: "",
     schedule_line2: "",
@@ -25,7 +29,9 @@ const Darshan = () => {
 
   useEffect(() => {
     axios
-      .get("https://dhamadmin.cesihpl.com/edit_darshan_rules.php?action=list")
+      .get(
+        `https://dhamadmin.cesihpl.com/edit_darshan_rules${path}.php?action=list`
+      )
       .then((res: any) => {
         const text = res.data.items[0].rules_text || "";
         const lines = text
