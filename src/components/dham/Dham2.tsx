@@ -47,7 +47,7 @@ const Dham2 = () => {
         `https://dhamadmin.cesihpl.com/edit_dhamcontent${path}.php?action=list`
       )
       .then((res: any) => {
-        const text = res.data.items[0].paragraphs[0] || "";
+        const text = res.data.items[0].paragraphs.join("\r\n") || "";
         const lines = text
           .split(/\r?\n/)
           .map((line: string) => line.trim())
@@ -141,7 +141,7 @@ const Dham2 = () => {
         </div>
 
         <BlurPopup isOpen={isOpen} setIsOpen={setIsOpen}>
-          <h2 className="text-3xl lg:text-[2.5rem] xl:text-[3.4rem] font-bold text-[#ff8127] text-center mb-5 uppercase">
+          <h2 className="text-3xl lg:text-[2.5rem] xl:text-[3.4rem] mt-1 font-bold text-[#ff8127] text-center mb-5 uppercase">
             {t("titles.dham")}
           </h2>
           {data.map((val, idx) => (

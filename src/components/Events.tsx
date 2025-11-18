@@ -430,7 +430,6 @@ const Events = () => {
               transition={{ duration: 0.25 }}
               className="relative z-120 max-w-[90vw] max-h-[90vh] object-contain rounded-xl"
             />
-
             <button
               onClick={prevImage}
               className="absolute left-5 top-1/2 -translate-y-1/2 z-130 cursor-pointer hover:text-gray-300 text-white p-2 rounded-full text-3xl"

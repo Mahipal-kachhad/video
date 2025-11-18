@@ -2,11 +2,15 @@
 import { useGSAP } from "@gsap/react";
 import axios from "axios";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useEffect, useRef, useState } from "react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const VideoModel = () => {
   const [video, setVideo] = useState<string>(null!);
   const divRef = useRef<HTMLDivElement>(null!);
+
   useGSAP(() => {
     const mm = gsap.matchMedia();
 
@@ -45,6 +49,10 @@ const VideoModel = () => {
         transformOrigin: "center center",
       });
     });
+
+    return () => {
+      mm.revert();
+    };
   }, []);
 
   useEffect(() => {
@@ -53,6 +61,9 @@ const VideoModel = () => {
       .then((data: any) => {
         if (data.data.videos[0]?.status)
           setVideo(`https://dhamadmin.cesihpl.com/${data.data.videos[0].url}`);
+        setTimeout(() => {
+          ScrollTrigger.refresh();
+        }, 100);
       });
   }, []);
 

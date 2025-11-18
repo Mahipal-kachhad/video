@@ -1,6 +1,7 @@
 "use client";
 import axios from "axios";
 import { useTranslations } from "next-intl";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BsTelephoneFill } from "react-icons/bs";
 import { HiMail } from "react-icons/hi";
@@ -8,6 +9,9 @@ import { MdLocationPin } from "react-icons/md";
 
 const Map = () => {
   const t = useTranslations();
+  const pathName = usePathname();
+  const lang = pathName.split("/")[1] || "en";
+  const path = lang === "hi" ? "_hin" : lang === "gu" ? "_guj" : "";
   const [data, setData] = useState({
     mobile: "",
     office_hours: "",
@@ -16,7 +20,9 @@ const Map = () => {
 
   useEffect(() => {
     axios
-      .get(" https://dhamadmin.cesihpl.com/edit_contact_info.php?action=list")
+      .get(
+        `https://dhamadmin.cesihpl.com/edit_contact_info${path}.php?action=list`
+      )
       .then((data: any) => {
         setData(data.data.items[0]);
       });

@@ -9,6 +9,7 @@ const Darshan = () => {
   const pathName = usePathname();
   const lang = pathName.split("/")[1] || "en";
   const path = lang === "hi" ? "_hin" : lang === "gu" ? "_guj" : "";
+  const path2 = lang === "hi" ? "hin" : lang === "gu" ? "guj" : "";
   const [data, setData] = useState({
     schedule_line1: "",
     schedule_line2: "",
@@ -21,7 +22,9 @@ const Darshan = () => {
 
   useEffect(() => {
     axios
-      .get("https://dhamadmin.cesihpl.com/edit_darshantime.php?action=list")
+      .get(
+        `https://dhamadmin.cesihpl.com/edit_darshantime${path2}.php?action=list`
+      )
       .then((data: any) => {
         setData(data.data.items[0]);
       });

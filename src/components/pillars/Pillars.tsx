@@ -82,16 +82,16 @@ const Pillars = () => {
             key={idx}
             className="w-[320px]! lg:w-[350px]! rounded-3xl aspect-70/44 lg:aspect-70/47 bg-black relative"
           >
-            <div className="p-6 lg:p-7">
+            <div className="p-6 lg:p-8">
               <img
                 src={val.icon_path}
                 alt={`${val.title} icon`}
                 className="block h-[35px] lg:h-10"
               />
-              <h3 className="font-bold text-xl lg:text-2xl mt-3 lg:mt-5 mb-1">
+              <h3 className="font-bold text-xl lg:text-2xl mt-3 lg:mt-5 mb-4">
                 {val.title}
               </h3>
-              <p className="text-[0.75rem] leading-6 lg:text-sm lg:leading-7 line-clamp-3 tracking-wide text-justify [word-spacing:2px]">
+              <p className="text-[0.75rem] leading-6 lg:text-sm lg:leading-6 line-clamp-3 tracking-wide text-justify [word-spacing:2px]">
                 {val.content}
               </p>
 
@@ -127,7 +127,7 @@ const Pillars = () => {
           isOpen={!!selectedPillar}
           setIsOpen={() => setSelectedPillar(null)}
         >
-          <h2 className="text-3xl lg:text-[2.5rem] xl:text-[3.4rem] font-bold text-[#ff8127] text-center mb-5 lg:mb-10 uppercase">
+          <h2 className="text-3xl lg:text-[2.5rem] xl:text-[3.4rem] mt-1 font-bold text-[#ff8127] text-center mb-5 lg:mb-10 uppercase">
             {selectedPillar.title}
           </h2>
           <p className="pb-3 text-justify leading-7 lg:leading-8.5 indent-25">

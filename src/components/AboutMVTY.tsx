@@ -40,9 +40,20 @@ const AboutMVTY = () => {
               url: `https://dhamadmin.cesihpl.com/${val.url}`,
             }))
         );
-      })
-      .then(() => {
-        setImagesMobile(images);
+      });
+
+    axios
+      .get(
+        "https://dhamadmin.cesihpl.com/edit_home_slider_mobile.php?action=list"
+      )
+      .then((data: any) => {
+        setImagesMobile(
+          data.data.images
+            .filter((val: any) => val.status)
+            .map((val: any) => ({
+              url: `https://dhamadmin.cesihpl.com/${val.url}`,
+            }))
+        );
       });
   }, []);
 
@@ -50,7 +61,7 @@ const AboutMVTY = () => {
     if (window.innerWidth < 640) {
       setImages(imagesMobile);
     }
-  }, []);
+  }, [imagesMobile]);
 
   const swiperRef = useRef<SwiperRef>(null);
   const paginationRef = useRef<HTMLDivElement>(null);
@@ -88,7 +99,7 @@ const AboutMVTY = () => {
         className="text-3xl lg:text-[2.5rem] xl:text-[3.4rem] font-bold sm:w-[85vw] max-w-6xl mx-auto uppercase text-center text-[#ff8127]"
         {...fadeUp()}
       >
-        {t('mvtyDham')}
+        {t("mvtyDham")}
       </motion.h1>
 
       <div>

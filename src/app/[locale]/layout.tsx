@@ -10,6 +10,9 @@ const locales = ["en", "hi", "gu"];
 export const metadata: Metadata = {
   title: "MVTY Dham",
   description: "Maa Vishvambhari TirthYatra Dham",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export async function generateStaticParams() {
