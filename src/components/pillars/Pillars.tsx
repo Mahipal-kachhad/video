@@ -43,7 +43,6 @@ const Pillars = () => {
   }, []);
 
   const swiperRef = useRef<SwiperRef>(null);
-  const [isOpen, setIsOpen] = useState(false);
   const [selectedPillar, setSelectedPillar] = useState<Pillar | null>(null);
 
   return (

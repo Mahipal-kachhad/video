@@ -10,8 +10,12 @@ import axios from "axios";
 import Slider from "../Slider";
 import { ScrollTrigger } from "gsap/all";
 import { useTranslations } from "next-intl";
+import { usePathname } from "next/navigation";
 
 const DhamInfo = () => {
+  const pathName = usePathname();
+  const lang = pathName.split("/")[1] || "en";
+  const path = lang === "hi" ? "_hin" : lang === "gu" ? "_guj" : "";
   const t = useTranslations();
   const [images, setImages] = useState<{ url: string }[]>([
     { url: "/dham/maa10.jpg" },
@@ -51,7 +55,9 @@ const DhamInfo = () => {
 
   useEffect(() => {
     axios
-      .get("https://dhamadmin.cesihpl.com/edit_dhamcontent.php?action=list")
+      .get(
+        `https://dhamadmin.cesihpl.com/edit_dhamcontent${path}.php?action=list`
+      )
       .then((res: any) => {
         const text = res.data.items[0].paragraphs[0] || "";
         const lines = text
