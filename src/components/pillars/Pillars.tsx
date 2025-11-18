@@ -10,6 +10,7 @@ import BlurPopup from "../BlurPopup";
 import { BsPatchPlusFill } from "react-icons/bs";
 import DetailedSlider from "./DetailedSlider";
 import axios from "axios";
+import { useTranslations } from "next-intl";
 
 interface Pillar {
   title: string;
@@ -19,6 +20,7 @@ interface Pillar {
 }
 
 const Pillars = () => {
+  const t = useTranslations()
   const [pillarsContent, setPillarContent] = useState<Pillar[]>([]);
 
   useEffect(() => {
@@ -51,45 +53,8 @@ const Pillars = () => {
           className="text-3xl lg:text-[2.5rem] xl:text-[3.2rem] font-bold  uppercase text-[#ff8127]"
           {...fadeUp()}
         >
-          explore our pillars
+          {t("titles.pillars")}
         </motion.h2>
-        <BlurPopup isOpen={isOpen} setIsOpen={setIsOpen}>
-          <h2 className="text-3xl lg:text-[2.5rem] xl:text-[3.4rem] font-bold text-[#ff8127] text-center mb-5 lg:mb-10 uppercase">
-            Explore our pillars
-          </h2>
-          <p className="pb-3 text-justify leading-7 lg:leading-8.5 indent-25">
-            The pillars of the Dham capture its living spirit—learning,
-            devotion, service and harmony with nature.
-          </p>
-          <p className="pb-3 text-justify leading-7 lg:leading-8.5 indent-25">
-            Pathshala shares Vedic wisdom in a contemporary voice. Himalayas
-            offers a space for silence and inner ascent. Gokuldham brings the
-            joy of Krishna's leelas alive. Yagna Shala revives the discipline of
-            sacred action.
-          </p>
-          <p className="pb-3 text-justify leading-7 lg:leading-8.5 indent-25">
-            Together they invite every visitor to experience Maa's presence in
-            daily life—at home, at work and within the heart.
-          </p>
-          <ul style={{ margin: "4px 0 0", paddingLeft: 22 }}>
-            <li>
-              <span className="text-white">Pathshala</span> - learn,
-              contemplate, transform
-            </li>
-            <li>
-              <span className="text-white">Himalayas</span> - silence, tapas,
-              inner strength
-            </li>
-            <li>
-              <span className="text-white">Gokuldham</span> - joy, play,
-              devotion
-            </li>
-            <li>
-              <span className="text-white">Yagna Shala</span> - discipline of
-              karma and offering
-            </li>
-          </ul>
-        </BlurPopup>
       </div>
       <Swiper
         ref={swiperRef}

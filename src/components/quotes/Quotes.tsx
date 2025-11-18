@@ -7,8 +7,10 @@ import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import fadeUp from "../function";
 import { motion } from "framer-motion";
 import axios from "axios";
+import { useTranslations } from "next-intl";
 
 const Quotes = () => {
+  const t = useTranslations()
   const swiperRef = useRef<SwiperRef>(null);
 
   const [items, setItems] = useState<{ content: string; image_path: string }[]>(
@@ -38,7 +40,7 @@ const Quotes = () => {
         className="text-2xl sm:text-3xl lg:text-[2.5rem] xl:text-[3.4rem] font-bold w-[85vw] max-w-6xl mx-auto uppercase text-center text-[#ff8127] mt-3 lg:mt-15"
         {...fadeUp()}
       >
-        Quotes by Mahapatra
+        {t("titles.quotes")}
       </motion.h2>
       <Swiper
         effect={"coverflow"}

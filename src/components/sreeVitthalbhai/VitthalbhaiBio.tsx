@@ -7,8 +7,10 @@ import fadeUp from "../function";
 import Slider from "../Slider";
 import axios from "axios";
 import { ScrollTrigger } from "gsap/all";
+import { useTranslations } from "next-intl";
 
 const VitthalbhaiBio = () => {
+  const t = useTranslations();
   const [images, setImages] = useState<{ url: string }[]>([
     { url: "/dham/patr1.jpg" },
     { url: "/dham/patr15.jpg" },
@@ -67,7 +69,7 @@ const VitthalbhaiBio = () => {
         className="text-[1.8rem] leading-11 lg:text-[2.5rem] xl:text-[3.2rem] font-bold w-[85vw] max-w-6xl mx-auto uppercase text-center text-[#ff8127]"
         {...fadeUp()}
       >
-        Shri Mahapatra, Founder of MVTY Dham
+        {t("titles.mahapatra.title")}
       </motion.h2>
       <motion.div
         className="mt-10 w-[90vw] sm:w-[85vw] max-w-6xl mx-auto text-sm lg:text-lg "
@@ -86,7 +88,7 @@ const VitthalbhaiBio = () => {
           className="text-end text-[#FF8127] flex w-fit ms-auto gap-3 items-center pe-4 pt-5 cursor-pointer"
           onClick={() => setIsOpen(true)}
         >
-          More details{" "}
+          {t("viewMore")}{" "}
           <span className="inline text-2xl">
             <HiArrowLongRight />
           </span>
@@ -94,7 +96,7 @@ const VitthalbhaiBio = () => {
       </motion.div>
       <BlurPopup isOpen={isOpen} setIsOpen={setIsOpen}>
         <h2 className="text-3xl lg:text-[2.5rem] xl:text-[3.4rem] font-bold text-[#ff8127] text-center mb-5 lg:mb-10 uppercase">
-          SHree Mahapatra
+          {t("titles.mahapatra.popup")}
         </h2>
         {data.map((val, idx) => (
           <p

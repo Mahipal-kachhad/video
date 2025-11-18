@@ -1,15 +1,67 @@
 {
   "titles": {
     "mvtyDham": "About MVTY Dham",
-    "maa": "Glimpse of Mother Vishvambhari",
-    "mahapatra": "Shri Mahapatra, Founder of MVTY Dham",
+    "maa": {
+      "title": "Glimpse of Mother Vishvambhari",
+      "popup": "Maa Vishvambhari"
+    },
+    "mahapatra": {
+      "title": "Shri Mahapatra, Founder of MVTY Dham",
+      "popup": "SHree Mahapatra"
+    },
     "dham": "Maa Vishvambhari TirthYatra Dham",
     "pillars": "explore our pillars",
     "gallery": "Photo Gallery",
-    "quotes":"Quotes by Mahapatra"
+    "quotes": "Quotes by Mahapatra"
   },
   "events": {
-    "name": "mahipal",
-    "email": "a@gmail.com"
-  }
+    "t1": "Live Satsang & Events",
+    "t2": "Upcoming Events",
+    "t3": "List Of Celebrated Events",
+    "p1": "Join Maa's divine presence right now. The live broadcast is happening as we speak.",
+    "p2": "Click below to join the event.",
+    "button": "Participate",
+    "live": "join us live on : "
+  },
+  "darshan": {
+    "time": "Darshan Time",
+    "rules": "Darshan Rules",
+    "t1": "What is the daily darshan time schedule?",
+    "t2": "What is the Himalaya darshan closing time?",
+    "t3": "What is the aarti time?",
+    "p1": "Following the new rules for Darshan at the Temple is mandatory.",
+    "warning": "* Violation of the above rules may result in legal action."
+  },
+  "contact": {
+    "title": "MVTY Dham Details",
+    "t1": "Phone",
+    "t2": "Chat to US",
+    "d2": "Our Friendly Team is here to help.",
+    "t3": "Office",
+    "d3": "Time : Mon to Sat",
+    "d4": "Maa Vishvambhari TirthYatra Dham, Rabada - 396055, Ta. & Dist. Valsad (Guj-IND)"
+  },
+  "getInTouch": {
+    "t1": "GET IN TOUCH",
+    "p1": "Join the ranks of those who demand the best. Upgrade your experience today!",
+    "name": "Enter Your Name",
+    "email": "Enter Your Email",
+    "message": "Enter Your Message",
+    "submit": "submit"
+  },
+  "footer": {
+    "t1": "Maa Vishvambhari",
+    "t2": "TirthYatra Dham",
+    "titleMobile": "MVTY Dham",
+    "p1": "Gujarat is a land of great warriors, saints and many great personalities. In one small town of such great land a divine, capable and dedicated soul known as Shri MAHAPATRA (Shri Vitthalbhai)",
+    "p2": "was born, who has charismatic personality. His deeds and efforts created such a vast atmosphere of reverence, divinity and light.",
+    "links": "Quick Links",
+    "contact": "Contact Info",
+    "l1": "Darshan Timing",
+    "l2": "Events & Satsang",
+    "l3": "Photo Gallery",
+    "l4": "Location & Contact",
+    "l5": "Our pillars"
+  },
+  "viewMore":"View More"
 }

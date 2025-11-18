@@ -1,8 +1,10 @@
 "use client";
 import axios from "axios";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 const Darshan = () => {
+  const t = useTranslations();
   const [data, setData] = useState({
     schedule_line1: "",
     schedule_line2: "",
@@ -32,7 +34,7 @@ const Darshan = () => {
           .filter((line: string) => line.length > 0);
 
         SetLines(lines);
-      })
+      });
   }, []);
 
   return (
@@ -40,13 +42,13 @@ const Darshan = () => {
       <div className="w-[90vw] sm:w-[85vw] max-w-7xl mx-auto flex-col xl:flex-row flex  justify-between bg-[#1d1d1f] sm:p-3 lg:p-7 my-15 gap-5 rounded-4xl">
         <div className=" text-white px-3 sm:p-3 xl:py-7 xl:p-8 xl:w-md ">
           <h2 className="text-3xl text-center xl:text-left sm:text-2xl xl:text-3xl font-bold text-orange-500 mb-4 sm:mb-8 uppercase">
-            Darshan Time
+            {t("darshan.time")}
           </h2>
 
           <ul className="space-y-6 text-neutral-100 sm:hidden xl:block">
             <li className="border-b border-b-white/15 pb-4">
               <p className="font-semibold text-[1.1rem] sm:text-[0.8rem] lg:text-lg">
-                What is the daily darshan time schedule?
+                {t("darshan.t1")}
               </p>
               <ul className="mt-2 text-neutral-400 space-y-1">
                 <li className="ps-4 lg:ps-10 text-[1rem] sm:text-[0.65rem] lg:text-lg">
@@ -59,7 +61,7 @@ const Darshan = () => {
             </li>
             <li className="border-b border-b-white/15 pb-4">
               <p className="font-semibold text-[1.1rem] sm:text-[0.8rem] lg:text-lg">
-                What is the Himalaya darshan closing time?
+                {t("darshan.t2")}
               </p>
               <p className="mt-2 text-neutral-400  ps-4 lg:ps-10 text-[1rem] sm:text-[0.65rem] lg:text-lg">
                 {data.himalaya_closing_time}
@@ -67,7 +69,7 @@ const Darshan = () => {
             </li>
             <li>
               <p className="font-semibold text-[1.1rem] sm:text-[0.8rem] lg:text-lg">
-                What is the aarti time?
+                {t("darshan.t3")}
               </p>
               <ul className="mt-2 text-neutral-400 space-y-1">
                 <li className="ps-4 lg:ps-10 text-[1rem] sm:text-[0.65rem] lg:text-lg">
@@ -82,36 +84,30 @@ const Darshan = () => {
 
           <ul className="text-neutral-100 hidden sm:flex flex-row xl:hidden">
             <li className="border-e border-e-white me-4 lg:me-10 flex-1 pe-1">
-              <p className="font-semibold text-[1rem]">
-                What is the daily darshan time schedule?
-              </p>
+              <p className="font-semibold text-[1rem]">{t("darshan.t1")}</p>
               <ul className="mt-2 text-neutral-400 space-y-1">
                 <li className="lg:ps-10 text-[0.8rem] lg:text-[1rem]">
-                  - Morning: 7:30 AM to 1:00 PM
+                  {data.schedule_line1}
                 </li>
                 <li className="lg:ps-10 text-[0.8rem] lg:text-[1rem]">
-                  - Afternoon: 2:30 PM to 8:30 PM
+                  {data.schedule_line2}
                 </li>
               </ul>
             </li>
             <li className="border-e border-e-white me-4 lg:me-10 flex-1">
-              <p className="font-semibold text-[1rem]">
-                What is the Himalaya darshan closing time?
-              </p>
+              <p className="font-semibold text-[1rem]">{t("darshan.t2")}</p>
               <p className="mt-2 text-neutral-400  lg:ps-10 text-[0.8rem] lg:text-[1rem]">
-                - Everyday: 7:00 PM
+                {data.himalaya_closing_time}
               </p>
             </li>
             <li className="">
-              <p className="font-semibold text-[1rem]">
-                What is the aarti time?
-              </p>
+              <p className="font-semibold text-[1rem]">{t("darshan.t3")}</p>
               <ul className="mt-2 text-neutral-400 space-y-1 pt-5">
                 <li className="lg:ps-10 text-[0.8rem] lg:text-[1rem]">
-                  - Morning: 8:15 AM (Everyday)
+                  {data.aarti_time1}
                 </li>
                 <li className="lg:ps-10 text-[0.8rem] lg:text-[1rem]">
-                  - Evening: 7:15 PM (Everyday)
+                  {data.aarti_time2}
                 </li>
               </ul>
             </li>
@@ -120,10 +116,10 @@ const Darshan = () => {
 
         <div className="sm:bg-black text-white sm:p-8 lg:px-10 xl:p-7 pt-10 sm:pt-4 rounded-4xl w-full ">
           <h2 className="text-3xl text-center xl:text-left sm:text-2xl xl:text-3xl font-bold text-orange-500 mb-4 xl:mb-8 uppercase">
-            Darshan Rules
+            {t("darshan.rules")}
           </h2>
           <p className="font-bold text-white mb-4 text-[1.1rem] sm:text-[1rem] lg:text-[1.3rem] xl:text-lg">
-            Following the new rules for Darshan at the Temple is mandatory.
+            {t("darshan.p1")}
           </p>
 
           <ul className="space-y-3 text-neutral-300 list-disc text-[1.1rem] sm:text-[0.9rem] lg:text-[1.1rem] xl:text-lg list-outside ps-9">
@@ -132,7 +128,7 @@ const Darshan = () => {
             ))}
           </ul>
           <div className="w-9/10 sm:w-fit mt-4 sm:mt-3 xl:mt-4 bg-red-600 mx-auto px-5 py-2 lg:px-10 text-white text-[0.9rem] sm:text-[0.7rem] lg:text-sm font-semibold text-center p-1 lg:p-3 rounded-2xl uppercase sm:rounded-full">
-            * Violation of the above rules may result in legal action.
+            {t("darshan.warning")}
           </div>
         </div>
       </div>

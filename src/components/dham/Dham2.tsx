@@ -8,8 +8,10 @@ import { Swiper, SwiperRef, SwiperSlide } from "swiper/react";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import axios from "axios";
 import { ScrollTrigger } from "gsap/all";
+import { useTranslations } from "next-intl";
 
 const Dham2 = () => {
+  const t = useTranslations();
   const [images, setImages] = useState<{ url: string }[]>([
     { url: "/dham/maa10.jpg" },
     { url: "/dham/maa11.jpg" },
@@ -46,7 +48,8 @@ const Dham2 = () => {
           .filter((line: string) => line.length > 0);
 
         setData(lines);
-      }).then(() => {
+      })
+      .then(() => {
         ScrollTrigger.refresh();
       });
   }, []);
@@ -61,7 +64,7 @@ const Dham2 = () => {
           {...fadeUp()}
           className="text-3xl leading-11 lg:text-[2.5rem] xl:text-[3.4rem] font-bold w-[85vw] max-w-6xl mx-auto uppercase text-center text-[#ff8127]"
         >
-          Maa Vishvambhari TirthYatra Dham
+          {t("titles.dham")}
         </motion.h2>
 
         <div className="flex gap-6 h-[55vw] items-center pt-20">
@@ -80,7 +83,7 @@ const Dham2 = () => {
               className="text-end text-[#FF8127] flex w-fit ms-auto gap-3 items-center pe-4 pt-5 cursor-pointer"
               onClick={() => setIsOpen(true)}
             >
-              More details{" "}
+              {t("viewMore")}{" "}
               <span className="inline text-2xl">
                 <HiArrowLongRight />
               </span>
@@ -133,7 +136,7 @@ const Dham2 = () => {
 
         <BlurPopup isOpen={isOpen} setIsOpen={setIsOpen}>
           <h2 className="text-3xl lg:text-[2.5rem] xl:text-[3.4rem] font-bold text-[#ff8127] text-center mb-5 uppercase">
-            Maa Vishvambhari TirthYatra Dham
+            {t("titles.dham")}
           </h2>
           {data.map((val, idx) => (
             <p

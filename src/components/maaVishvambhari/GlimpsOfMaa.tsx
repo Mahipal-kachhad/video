@@ -2,6 +2,7 @@
 import { HiArrowLongRight } from "react-icons/hi2";
 import BlurPopup from "../BlurPopup";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import fadeUp from "../function";
 import Slider from "../Slider";
@@ -51,19 +52,21 @@ const GlimpsOfMaa = () => {
           .map((line: string) => line.trim())
           .filter((line: string) => line.length > 0);
         setData(lines);
-      }).then(() => {
+      })
+      .then(() => {
         ScrollTrigger.refresh();
       });
   }, []);
 
   const [isOpen, setIsOpen] = useState(false);
+  const t = useTranslations();
   return (
     <div className="bg-black py-10">
       <motion.h2
         className="text-3xl leading-11 lg:text-[2.5rem] xl:text-[3.4rem] font-bold w-[85vw] max-w-6xl mx-auto uppercase text-center text-[#ff8127]"
         {...fadeUp()}
       >
-        Glimpse of Mother Vishvambhari
+        {t("titles.maa.title")}
       </motion.h2>
       <motion.div
         className="mt-10 w-[90vw] sm:w-[85vw] max-w-6xl mx-auto text-sm lg:text-lg "
@@ -82,7 +85,7 @@ const GlimpsOfMaa = () => {
           className="text-end text-[#FF8127] flex w-fit ms-auto gap-3 items-center pe-4 pt-5 cursor-pointer"
           onClick={() => setIsOpen(true)}
         >
-          More details{" "}
+          {t("viewMore")}{" "}
           <span className="inline text-2xl">
             <HiArrowLongRight />
           </span>
@@ -90,7 +93,7 @@ const GlimpsOfMaa = () => {
       </motion.div>
       <BlurPopup isOpen={isOpen} setIsOpen={setIsOpen}>
         <h2 className="text-3xl lg:text-[2.5rem] xl:text-[3.4rem] font-bold text-[#ff8127] text-center mb-5 uppercase">
-          Maa Vishvambhari
+          {t("titles.maa.popup")}
         </h2>
         {data.map((val, idx) => (
           <p

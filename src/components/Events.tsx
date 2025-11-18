@@ -8,12 +8,7 @@ import BlurPopup from "./BlurPopup";
 import { Dialog } from "@headlessui/react";
 import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
-
-const accordionData = [
-  { title: "Live Satsang & Events" },
-  { title: "Upcoming Events" },
-  { title: "List Of Celebrated Events" },
-];
+import { useTranslations } from "next-intl";
 
 type UpcomingItem = { image: string; title: string; date: string };
 type PastItem = {
@@ -26,6 +21,13 @@ type PastItem = {
 const toSrc = (img: any) => (typeof img === "string" ? img : img?.src ?? "");
 
 const Events = () => {
+  const t = useTranslations();
+
+  const accordionData = [
+    { title: t("events.t1") },
+    { title: t("events.t2") },
+    { title: t("events.t3") },
+  ];
   const [openIndex, setOpenIndex] = useState<number | null>(1);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -206,22 +208,21 @@ const Events = () => {
                       {idx === 0 && (
                         <div className="pb-2 lg:pb-4 text-neutral-300">
                           <p className="text-[#FF8127] text-justify w-9/10 sm:text-center mx-auto xl:mx-0 xl:w-full xl:text-left text-[1.1rem] xl:text-sm">
-                            Join Maa's divine presence right now. The live
-                            broadcast is happening as we speak.
+                            {t("events.p1")}
                           </p>
                           <p className="text-center xl:text-left py-3 sm:py-2 lg:py-3 text-[1.1rem] sm:text-[0.8rem]">
-                            "Click below to join the event."
+                            {t("events.p2")}
                           </p>
                           <a
                             href={data.url}
                             target="_blank"
                             className="px-7 w-fit py-2 mx-auto xl:mx-0 block text-[0.8rem] text-[#FF8127] font-bold rounded-full bg-[#ff8127]/10 hover:bg-[#ff8127]/20 active:bg-[#ff8127]/5 transition ease-in cursor-pointer border-t border-t-white/20 border-l border-l-white/20"
                           >
-                            Participate
+                            {t("events.button")}
                           </a>
                           <div className="flex xl:block gap-3 items-center py-3 xl:py-0 mx-auto xl:mx-0 w-fit event">
                             <p className="py-2 sm:text-sm text-neutral-500">
-                              Join us live on:
+                              {t("events.live")}
                             </p>
                             <div className="flex gap-3 lg:gap-5 text-[#FF8127] items-end">
                               <a

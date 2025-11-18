@@ -1,11 +1,13 @@
 "use client";
 import axios from "axios";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { BsTelephoneFill } from "react-icons/bs";
 import { HiMail } from "react-icons/hi";
 import { MdLocationPin } from "react-icons/md";
 
 const Map = () => {
+  const t = useTranslations();
   const [data, setData] = useState({
     mobile: "",
     office_hours: "",
@@ -25,7 +27,7 @@ const Map = () => {
       <div className="w-[85vw] max-w-7xl mx-auto flex flex-col sm:flex-row justify-between gap-7 rounded-xl lg:rounded-3xl">
         <div className=" text-white sm:w-sm lg:w-lg rounded-3xl bg-[#1c1c1c]">
           <h2 className="text-xl lg:text-3xl font-bold text-white p-4 lg:p-7 text-center">
-            MVTY Dham Details
+            {t("contact.title")}
           </h2>
 
           <div className="text-neutral-100 rounded-3xl  bg-[#282828] px-2 lg:px-7 py-2 lg:py-5">
@@ -35,7 +37,7 @@ const Map = () => {
               </div>
               <div>
                 <h4 className="font-bold text-[1.1rem] sm:text-[0.75rem] lg:text-lg">
-                  Phone
+                  {t("contact.t1")}
                 </h4>
                 <p className="text-[0.9rem] sm:text-[0.7rem] lg:text-sm text-[#686868]">
                   {data.office_hours}
@@ -51,10 +53,10 @@ const Map = () => {
               </div>
               <div>
                 <h4 className="font-bold text-[1.1rem] sm:text-[0.75rem] lg:text-lg">
-                  Chat to US
+                  {t("contact.t2")}
                 </h4>
                 <p className="text-[0.9rem] sm:text-[0.7rem] lg:text-sm text-[#686868]">
-                  Our Friendly Team is here to help.
+                  {t("contact.d2")}
                 </p>
                 <p className="font-bold text-[1.1rem] sm:text-[0.75rem] lg:text-lg">
                   {data.email}
@@ -67,14 +69,13 @@ const Map = () => {
               </div>
               <div className="w-fit">
                 <h4 className="font-bold text-[1.1rem] sm:text-[0.75rem] lg:text-lg">
-                  Office
+                  {t("contact.t3")}
                 </h4>
                 <p className="text-[0.9rem] sm:text-[0.7rem] lg:text-sm text-[#686868] w-fit">
-                  Time : Mon to Sat
+                  {t("contact.d3")}
                 </p>
                 <p className="font-bold text-[1.1rem] sm:text-[0.75rem] lg:text-lg w-fit">
-                  Maa Vishvambhari TirthYatra Dham, Rabada - 396055, Ta. & Dist.
-                  Valsad (Guj-IND)
+                  {t("contact.d4")}
                 </p>
               </div>
             </div>

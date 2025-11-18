@@ -2,12 +2,14 @@
 import { useGSAP } from "@gsap/react";
 import axios, { AxiosError } from "axios";
 import gsap from "gsap";
+import { useTranslations } from "next-intl";
 import { ChangeEvent, FormEvent, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 gsap.registerPlugin(useGSAP);
 
 const Contact = () => {
+  const t = useTranslations("getInTouch");
   const divRef = useRef<HTMLDivElement>(null!);
   const rotationConfig = useRef({
     name: 50,
@@ -123,18 +125,17 @@ const Contact = () => {
 
         <div className="w-full h-3/4 absolute bottom-0 left-1/2 -translate-x-1/2">
           <h3 className="text-4xl sm:text-6xl text-center pt-10 font-bold">
-            GET IN TOUCH
+            {t("t1")}
           </h3>
           <p className="w-5/6 sm:w-1/2 text-center mx-auto py-6 sm:py-5 text-[#FF8127]">
-            Join the ranks of those who demand the best. Upgrade your experience
-            today!
+            {t("p1")}
           </p>
 
           <form onSubmit={handleSubmit}>
             <div className="flex-col space-y-5 sm:space-y-0 sm:flex-row flex gap-5">
               <input
                 name="name"
-                placeholder="Enter your Name"
+                placeholder={t("name")}
                 onFocus={() => handleFocus("name")}
                 onBlur={handleBlur}
                 value={data.name}
@@ -145,7 +146,7 @@ const Contact = () => {
               <input
                 name="email"
                 value={data.email}
-                placeholder="Enter your Email id"
+                placeholder={t("email")}
                 onFocus={() => handleFocus("email")}
                 onBlur={handleBlur}
                 onChange={handleChange}
@@ -157,7 +158,7 @@ const Contact = () => {
             <div className="pt-5 sm:pt-7">
               <textarea
                 value={data.message}
-                placeholder="Enter your Message"
+                placeholder={t("message")}
                 onFocus={() => handleFocus("message")}
                 onBlur={handleBlur}
                 onChange={handleChange}
@@ -172,7 +173,7 @@ const Contact = () => {
                 type="submit"
                 className="px-20 py-3 rounded-full cursor-pointer hover:bg-white/13 transition ease-in active:bg-white/5 bg-white/7 backdrop-blur-[5px] border-t-white/20 border-t border-l-white/20 border-l mx-auto block mt-5"
               >
-                Submit
+                {t("submit")}
               </button>
             </div>
           </form>

@@ -9,8 +9,10 @@ import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import axios from "axios";
 import Slider from "../Slider";
 import { ScrollTrigger } from "gsap/all";
+import { useTranslations } from "next-intl";
 
 const DhamInfo = () => {
+  const t = useTranslations();
   const [images, setImages] = useState<{ url: string }[]>([
     { url: "/dham/maa10.jpg" },
     { url: "/dham/maa11.jpg" },
@@ -73,7 +75,7 @@ const DhamInfo = () => {
         className="text-3xl leading-11 lg:text-[2.5rem] xl:text-[3.4rem] font-bold w-[85vw] max-w-6xl mx-auto uppercase text-center text-[#ff8127]"
         {...fadeUp()}
       >
-        Maa Vishvambhari TirthYatra Dham
+        {t("titles.dham")}
       </motion.h2>
 
       <div className="sm:flex items-center w-[90vw] sm:w-[85vw] max-w-6xl mx-auto pb-10 sm:mt-10">
@@ -94,7 +96,7 @@ const DhamInfo = () => {
             className="text-end text-[#FF8127] flex w-fit ms-auto gap-3 items-center pe-4 pt-5 cursor-pointer"
             onClick={() => setIsOpen(true)}
           >
-            More details{" "}
+            {t("viewMore")}{" "}
             <span className="inline text-2xl">
               <HiArrowLongRight />
             </span>
@@ -150,7 +152,7 @@ const DhamInfo = () => {
 
       <BlurPopup isOpen={isOpen} setIsOpen={setIsOpen}>
         <h2 className="text-3xl lg:text-[2.5rem] xl:text-[3.4rem] font-bold text-[#ff8127] text-center mb-5 uppercase">
-          Maa Vishvambhari TirthYatra Dham
+          {t("titles.dham")}
         </h2>
         {data.map((val, idx) => (
           <p

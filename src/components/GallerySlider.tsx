@@ -6,8 +6,10 @@ import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import axios from "axios";
 import { motion } from "framer-motion";
 import fadeUp from "./function";
+import { useTranslations } from "next-intl";
 
-const BlurSlider = () => {
+const GallerySlider = () => {
+  const t = useTranslations()
   const [images, setImages] = useState<{ url: string }[]>([
     { url: "/dham/patr15.jpg" },
     { url: "/dham/maa10.jpg" },
@@ -51,7 +53,7 @@ const BlurSlider = () => {
         className="text-3xl pb-5 sm:pb-15 lg:text-[2.5rem] xl:text-[3.4rem] font-bold sm:w-[85vw] max-w-6xl mx-auto uppercase text-center text-[#ff8127]"
         {...fadeUp()}
       >
-        Photo Gallery
+        {t("titles.gallery")}
       </motion.h1>
       <Swiper
         ref={swiperRef}
@@ -114,4 +116,4 @@ const BlurSlider = () => {
   );
 };
 
-export default BlurSlider;
+export default GallerySlider;

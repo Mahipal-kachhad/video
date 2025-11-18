@@ -1,12 +1,10 @@
-// app/[locale]/layout.tsx (Corrected)
-
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import "../globals.css";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
-// Define your supported locales centrally
 const locales = ["en", "hi", "gu"];
 
 export const metadata: Metadata = {
@@ -20,28 +18,22 @@ export async function generateStaticParams() {
 
 export default async function LocaleLayout({
   children,
-  // 🔑 THE CRITICAL FIX: Destructure the resolved object from the awaited params
   params,
 }: {
   children: React.ReactNode;
-  // 🔑 Correct the type to show params is a Promise of the object
-  params: Promise<{ locale: string }>; 
+  params: Promise<{ locale: string }> | { locale: string };
 }) {
-  // 🔑 THE CRITICAL FIX: AWAIT the params Promise before accessing 'locale'
-  const { locale } = await params; 
-
-  // 1. Check if the locale is supported
+  const { locale } = await params;
   if (!locales.includes(locale)) {
     notFound();
   }
-
-  // 2. Load the messages using the server function
-  const messages = await getMessages();
+  const messages = await getMessages({ locale });
 
   return (
     <html lang={locale}>
       <body>
         <NextIntlClientProvider messages={messages}>
+          <LanguageSwitcher />
           {children}
         </NextIntlClientProvider>
       </body>

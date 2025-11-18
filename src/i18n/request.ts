@@ -1,14 +1,12 @@
-// src/i18n/request.ts (Confirmed clean)
-
 import { getRequestConfig } from 'next-intl/server';
-import { routing } from './routing'; // Import your routing config
+import { routing } from './routing'; 
 
-export default getRequestConfig(async ({ requestLocale }) => {
-  // Ensure requestLocale is resolved if it's a Promise (as per the previous fix)
-  const locale = (await requestLocale) || routing.defaultLocale; 
+export default getRequestConfig(async (params) => {
+  const { locale } = params;
+  const finalLocale = locale || routing.defaultLocale;
   
   return {
-    locale: locale,
-    messages: (await import(`../../messages/${locale}.json`)).default,
+    locale: finalLocale,
+    messages: (await import(`../../messages/${finalLocale}.json`)).default,
   };
 });

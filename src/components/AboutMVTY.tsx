@@ -8,8 +8,10 @@ import { motion } from "framer-motion";
 import { FaPause, FaPlay } from "react-icons/fa";
 import fadeUp from "./function";
 import axios from "axios";
+import { useTranslations } from "next-intl";
 
 const AboutMVTY = () => {
+  const t = useTranslations("titles");
   const [images, setImages] = useState([
     { url: "/dham/maa10.jpg" },
     { url: "/dham/maa11.jpg" },
@@ -86,7 +88,7 @@ const AboutMVTY = () => {
         className="text-3xl lg:text-[2.5rem] xl:text-[3.4rem] font-bold sm:w-[85vw] max-w-6xl mx-auto uppercase text-center text-[#ff8127]"
         {...fadeUp()}
       >
-        About MVTY Dham
+        {t('mvtyDham')}
       </motion.h1>
 
       <div>
