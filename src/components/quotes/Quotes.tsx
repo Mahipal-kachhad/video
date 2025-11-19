@@ -13,7 +13,8 @@ import { usePathname } from "next/navigation";
 const Quotes = () => {
   const pathName = usePathname();
   const lang = pathName.split("/")[1] || "en";
-  const path = lang === "hi" ? "_hin" : lang === "gu" ? "_guj" : "";
+  const content =
+    lang === "hi" ? "content_hin" : lang === "gu" ? "content_guj" : "content";
   const t = useTranslations();
   const swiperRef = useRef<SwiperRef>(null);
 
@@ -23,14 +24,14 @@ const Quotes = () => {
 
   useEffect(() => {
     axios
-      .get(`https://dhamadmin.cesihpl.com/edit_quotes${path}.php?action=list`)
+      .get("https://dhamadmin.cesihpl.com/edit_quotes.php?action=list")
       .then((data: any) => {
         setItems(
           data.data.quotes
             .filter((val: any) => val.status === "1")
             .map((val: any) => {
               return {
-                content: val.content,
+                content: val[content],
                 image_path: `https://dhamadmin.cesihpl.com/${val.image_path}`,
               };
             })

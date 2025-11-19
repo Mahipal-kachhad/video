@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiChevronDown } from "react-icons/fi";
 import axios from "axios";
-import img1 from "../../public/dham/event1.jpg";
 import BlurPopup from "./BlurPopup";
 import { Dialog } from "@headlessui/react";
 import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
@@ -19,13 +18,14 @@ type PastItem = {
   images: { url: string }[];
 };
 
-const toSrc = (img: any) => (typeof img === "string" ? img : img?.src ?? "");
+const toSrc = (img: any) => (typeof img === "string" ? img : img?.src ?? null);
 
 const Events = () => {
   const t = useTranslations();
   const pathName = usePathname();
   const lang = pathName.split("/")[1] || "en";
-  const path = lang === "hi" ? "_hin" : lang === "gu" ? "_guj" : "";
+  const path =
+    lang === "hi" ? "title_hin" : lang === "gu" ? "title_guj" : "title";
   const accordionData = [
     { title: t("events.t1") },
     { title: t("events.t2") },
@@ -39,10 +39,12 @@ const Events = () => {
 
   const [data, setData] = useState<{
     url: string;
+    img: string | null;
     upcoming: UpcomingItem[];
     past: PastItem[];
   }>({
     url: "",
+    img: null,
     upcoming: [],
     past: [],
   });
@@ -82,7 +84,7 @@ const Events = () => {
           setData((prev) => ({
             ...prev,
             url: res.data.items[0].link_url,
-            img: res.data.items[0].image_path,
+            img: `https://dhamadmin.cesihpl.com/${res.data.items[0].image_path}`,
           }));
         }
       })
@@ -90,7 +92,7 @@ const Events = () => {
 
     axios
       .get(
-        `https://dhamadmin.cesihpl.com/edit_upcoming_event_details${path}.php?action=list`
+        "https://dhamadmin.cesihpl.com/edit_upcoming_event_details.php?action=list"
       )
       .then((res: any) => {
         const upcoming =
@@ -98,7 +100,7 @@ const Events = () => {
             .filter((val: any) => val.is_active)
             .map((val: any) => ({
               image: `https://dhamadmin.cesihpl.com/${val.image_path}`,
-              title: val.title,
+              title: val[path],
               date: val.event_date,
             })) || [];
         setData((prev) => ({ ...prev, upcoming }));
@@ -109,16 +111,14 @@ const Events = () => {
       .catch(() => {});
 
     axios
-      .get(
-        `https://dhamadmin.cesihpl.com/edit_event_details${path}.php?action=list`
-      )
+      .get("https://dhamadmin.cesihpl.com/edit_event_details.php?action=list")
       .then((res: any) => {
         const past =
           (res.data.images || [])
             .filter((val: any) => val.is_active)
             .map((val: any) => ({
               image: `https://dhamadmin.cesihpl.com/${val.image_path}`,
-              title: val.title,
+              title: val[path],
               date: val.event_date,
               images:
                 (val.sub_images || [])
@@ -137,10 +137,10 @@ const Events = () => {
 
   const rightImageSrc =
     openIndex === 0
-      ? toSrc(img1)
+      ? toSrc(data.img)
       : openIndex === 1
-      ? data.upcoming[selectedUpcoming]?.image || toSrc(img1)
-      : data.past[selectedPast]?.image || toSrc(img1);
+      ? data.upcoming[selectedUpcoming]?.image
+      : data.past[selectedPast]?.image;
 
   const openPastPopup = (index: number) => {
     const images = data.past[index]?.images || [];
@@ -172,7 +172,7 @@ const Events = () => {
   return (
     <div className="h-fit w-full flex items-center justify-center sm:py-15 ">
       <div className="flex mx-auto px-8 w-full xl:w-[85vw] max-w-6xl p-6 lg:p-10 xl:rounded-4xl bg-black justify-between gap-10 items-center ">
-        <div className="w-full xl:w-md rounded-lg text-white 2xl:h-[400px] overflow-y-auto flex flex-col justify-between [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <div className="w-full h-full xl:w-md rounded-lg text-white flex flex-col justify-between">
           {accordionData.map((item, idx) => {
             const isOpen = openIndex === idx;
             return (
@@ -263,7 +263,7 @@ const Events = () => {
                             </div>
                           </div>
                           <img
-                            src="/dham/event1.jpg"
+                            src={toSrc(data.img)}
                             className="xl:hidden my-7 rounded-xl"
                             alt="event"
                           />
@@ -272,7 +272,7 @@ const Events = () => {
 
                       {idx === 1 && (
                         <div>
-                          <ol className="list-decimal list-inside pl-2 pb-4 text-neutral-400 space-y-1">
+                          <ol className="h-[220px] list-decimal list-inside pl-2 pb-4 text-neutral-400 space-y-1 overflow-y-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                             {data.upcoming.length === 0 ? (
                               <li className="text-neutral-500">
                                 No upcoming events.
@@ -303,7 +303,7 @@ const Events = () => {
                               />
                             ) : (
                               <img
-                                src={toSrc(img1)}
+                                src={toSrc(data.img)}
                                 alt="upcoming placeholder"
                                 className="w-full rounded-xl object-cover"
                               />
@@ -314,7 +314,7 @@ const Events = () => {
 
                       {idx === 2 && (
                         <div>
-                          <ol className="list-decimal list-inside pl-2 pb-4 text-neutral-400 space-y-1">
+                          <ol className="h-[220px] list-decimal list-inside pl-2 pb-4 text-neutral-400 space-y-1 overflow-y-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                             {data.past.length === 0 ? (
                               <li className="text-neutral-500">
                                 No past events.
@@ -351,7 +351,7 @@ const Events = () => {
                               />
                             ) : (
                               <img
-                                src={toSrc(img1)}
+                                src={toSrc(data.img)}
                                 alt="past placeholder"
                                 className="w-full rounded-xl object-cover"
                               />
@@ -373,7 +373,7 @@ const Events = () => {
               key={`${openIndex ?? 0}-${selectedUpcoming}-${selectedPast}`}
               src={rightImageSrc}
               alt="dham events images"
-              className="rounded-2xl w-full object-cover"
+              className="rounded-2xl w-full object-cover h-[400px]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}

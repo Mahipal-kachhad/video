@@ -73,6 +73,8 @@ const VideoGalaxy = () => {
       }, 0);
     });
 
+    ScrollTrigger.refresh();
+
     return () => {
       ctx.revert();
     };

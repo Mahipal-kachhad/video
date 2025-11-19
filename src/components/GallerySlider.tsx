@@ -9,24 +9,14 @@ import fadeUp from "./function";
 import { useTranslations } from "next-intl";
 
 const GallerySlider = () => {
-  const t = useTranslations()
+  const t = useTranslations();
   const [images, setImages] = useState<{ url: string }[]>([
-    { url: "/dham/patr15.jpg" },
-    { url: "/dham/maa10.jpg" },
-    { url: "/dham/maa11.jpg" },
-    { url: "/dham/maa15.jpg" },
-    { url: "/dham/patr8.jpg" },
-    { url: "/dham/patr9.jpg" },
-    { url: "/dham/patr10.jpg" },
-    { url: "/dham/patr1.jpg" },
-    { url: "/dham/patr15.jpg" },
-    { url: "/dham/maa10.jpg" },
-    { url: "/dham/maa11.jpg" },
-    { url: "/dham/maa15.jpg" },
-    { url: "/dham/patr8.jpg" },
-    { url: "/dham/patr9.jpg" },
-    { url: "/dham/patr10.jpg" },
-    { url: "/dham/patr1.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
   ]);
 
   useEffect(() => {
@@ -60,7 +50,6 @@ const GallerySlider = () => {
         centeredSlides={true}
         slidesPerView={"auto"}
         spaceBetween={-20}
-        loop
         speed={1300}
         breakpoints={{
           0: {

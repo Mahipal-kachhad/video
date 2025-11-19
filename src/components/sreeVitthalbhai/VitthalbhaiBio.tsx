@@ -16,18 +16,12 @@ const VitthalbhaiBio = () => {
   const path = lang === "hi" ? "_hin" : lang === "gu" ? "_guj" : "";
   const t = useTranslations();
   const [images, setImages] = useState<{ url: string }[]>([
-    { url: "/dham/patr1.jpg" },
-    { url: "/dham/patr15.jpg" },
-    { url: "/dham/patr1.jpg" },
-    { url: "/dham/patr15.jpg" },
-    { url: "/dham/patr1.jpg" },
-    { url: "/dham/patr15.jpg" },
-    { url: "/dham/patr1.jpg" },
-    { url: "/dham/patr15.jpg" },
-    { url: "/dham/patr1.jpg" },
-    { url: "/dham/patr15.jpg" },
-    { url: "/dham/patr1.jpg" },
-    { url: "/dham/patr15.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
   ]);
   const [data, setData] = useState([""]);
 
@@ -46,6 +40,9 @@ const VitthalbhaiBio = () => {
               };
             })
         );
+      })
+      .then(() => {
+        ScrollTrigger.refresh();
       });
   }, []);
 

@@ -17,11 +17,12 @@ const Dham2 = () => {
   const path = lang === "hi" ? "_hin" : lang === "gu" ? "_guj" : "";
   const t = useTranslations();
   const [images, setImages] = useState<{ url: string }[]>([
-    { url: "/dham/maa10.jpg" },
-    { url: "/dham/maa11.jpg" },
-    { url: "/dham/maa15.jpg" },
-    { url: "/dham/maa11.jpg" },
-    { url: "/dham/maa10.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
   ]);
   const [data, setData] = useState([""]);
 

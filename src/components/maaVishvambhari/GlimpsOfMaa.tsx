@@ -15,16 +15,12 @@ const GlimpsOfMaa = () => {
   const lang = pathName.split("/")[1] || "en";
   const path = lang === "hi" ? "_hin" : lang === "gu" ? "_guj" : "";
   const [images, setImages] = useState<{ url: string }[]>([
-    { url: "/dham/maa10.jpg" },
-    { url: "/dham/maa11.jpg" },
-    { url: "/dham/maa15.jpg" },
-    { url: "/dham/maa11.jpg" },
-    { url: "/dham/maa10.jpg" },
-    { url: "/dham/maa10.jpg" },
-    { url: "/dham/maa11.jpg" },
-    { url: "/dham/maa15.jpg" },
-    { url: "/dham/maa11.jpg" },
-    { url: "/dham/maa10.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
   ]);
   const [data, setData] = useState([""]);
 
@@ -43,6 +39,9 @@ const GlimpsOfMaa = () => {
               };
             })
         );
+      })
+      .then(() => {
+        ScrollTrigger.refresh();
       });
   }, []);
 

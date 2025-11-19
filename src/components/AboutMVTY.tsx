@@ -9,24 +9,26 @@ import { FaPause, FaPlay } from "react-icons/fa";
 import fadeUp from "./function";
 import axios from "axios";
 import { useTranslations } from "next-intl";
+import { ScrollTrigger } from "gsap/all";
 
 const AboutMVTY = () => {
   const t = useTranslations("titles");
   const [images, setImages] = useState([
-    { url: "/dham/maa10.jpg" },
-    { url: "/dham/maa11.jpg" },
-    { url: "/dham/maa15.jpg" },
-    { url: "/dham/patr1.jpg" },
-    { url: "/dham/patr15.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
   ]);
 
   const [imagesMobile, setImagesMobile] = useState([
-    { url: "/maa/maaM1.jpg" },
-    { url: "/maa/maaM2.jpg" },
-    { url: "/maa/patrM1.jpg" },
-    { url: "/maa/patrM2.jpg" },
-    { url: "/maa/dhamM1.jpg" },
-    { url: "/maa/dhamM2.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
+    { url: "/loading.jpg" },
   ]);
 
   useEffect(() => {
@@ -40,7 +42,9 @@ const AboutMVTY = () => {
               url: `https://dhamadmin.cesihpl.com/${val.url}`,
             }))
         );
-      });
+      }).then(() => {
+        ScrollTrigger.refresh();
+      });;
 
     axios
       .get(
@@ -54,7 +58,9 @@ const AboutMVTY = () => {
               url: `https://dhamadmin.cesihpl.com/${val.url}`,
             }))
         );
-      });
+      }).then(() => {
+        ScrollTrigger.refresh();
+      });;
   }, []);
 
   useEffect(() => {

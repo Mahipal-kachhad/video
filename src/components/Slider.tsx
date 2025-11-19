@@ -13,7 +13,6 @@ const Slider = ({ images }: { images: { url: string }[] }) => {
         ref={swiperRef}
         spaceBetween={24}
         centeredSlides
-        loop
         speed={600}
         initialSlide={1}
         slidesPerView={"auto"}

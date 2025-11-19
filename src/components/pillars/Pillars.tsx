@@ -23,20 +23,23 @@ interface Pillar {
 const Pillars = () => {
   const pathName = usePathname();
   const lang = pathName.split("/")[1] || "en";
-  const path = lang === "hi" ? "_hin" : lang === "gu" ? "_guj" : "";
+  const title =
+    lang === "hi" ? "title_hin" : lang === "gu" ? "title_guj" : "title";
+  const content =
+    lang === "hi" ? "content_hin" : lang === "gu" ? "content_guj" : "content";
   const t = useTranslations();
   const [pillarsContent, setPillarContent] = useState<Pillar[]>([]);
 
   useEffect(() => {
     axios
-      .get(`https://dhamadmin.cesihpl.com/edit_pillars${path}.php?action=list`)
+      .get("https://dhamadmin.cesihpl.com/edit_pillars.php?action=list")
       .then((data: any) => {
         setPillarContent(
           data.data.pillars.map((val: any) => {
             return {
-              title: val.title,
+              title: val[title],
               icon_path: `https://dhamadmin.cesihpl.com/${val.icon_path}`,
-              content: val.content,
+              content: val[content],
               sub_images: val.sub_images.map((v: any) => ({
                 url: `https://dhamadmin.cesihpl.com/${v.url}`,
               })),
