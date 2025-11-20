@@ -1,22 +1,22 @@
 import { setRequestLocale } from "next-intl/server";
-import AboutMVTY from "@/components/AboutMVTY";
-import Contact from "@/components/Contact";
-import Darshan from "@/components/Darshan";
+import AboutMVTY from "@/components/mvty/AboutMVTY";
+import Contact from "@/components/mvty/Contact";
+import Darshan from "@/components/mvty/Darshan";
 import Dham2 from "@/components/dham/Dham2";
 import DhamInfo from "@/components/dham/DhamInfo";
 import VideoModel from "@/components/dham/VideoModel";
-import Events from "@/components/Events";
-import Footer from "@/components/Footer";
+import Events from "@/components/mvty/Events";
+import Footer from "@/components/mvty/Footer";
 import GlimpsOfMaa from "@/components/maaVishvambhari/GlimpsOfMaa";
 import MaaVishvambhari from "@/components/maaVishvambhari/MaaVishvambhari";
-import Map from "@/components/Map";
+import Map from "@/components/mvty/Map";
 import Pillars from "@/components/pillars/Pillars";
 import Quotes from "@/components/quotes/Quotes";
 import SreeVitthalbhai from "@/components/sreeVitthalbhai/SreeVitthalbhai";
 import VitthalbhaiBio from "@/components/sreeVitthalbhai/VitthalbhaiBio";
-import VideoGalaxy from "@/components/VideoGalaxy";
+import VideoGalaxy from "@/components/videoAnimation/VideoGalaxy";
 import { Toaster } from "react-hot-toast";
-import GallerySlider from "@/components/GallerySlider";
+import GallerySlider from "@/components/mvty/GallerySlider";
 
 export default async function HomePage({
   params,

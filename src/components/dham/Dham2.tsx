@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import fadeUp from "../function";
+import fadeUp from "../mvty/function";
 import { HiArrowLongRight } from "react-icons/hi2";
-import BlurPopup from "../BlurPopup";
+import BlurPopup from "../mvty/BlurPopup";
 import { Swiper, SwiperRef, SwiperSlide } from "swiper/react";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import axios from "axios";

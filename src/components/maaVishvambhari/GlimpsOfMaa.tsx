@@ -1,11 +1,11 @@
 "use client";
 import { HiArrowLongRight } from "react-icons/hi2";
-import BlurPopup from "../BlurPopup";
+import BlurPopup from "../mvty/BlurPopup";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import fadeUp from "../function";
-import Slider from "../Slider";
+import fadeUp from "../mvty/function";
+import Slider from "../mvty/Slider";
 import axios from "axios";
 import { ScrollTrigger } from "gsap/all";
 import { usePathname } from "next/navigation";

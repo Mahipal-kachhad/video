@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import type { SwiperRef } from "swiper/react";
 import { EffectCoverflow, Navigation } from "swiper/modules";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import fadeUp from "../function";
+import fadeUp from "../mvty/function";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useTranslations } from "next-intl";
