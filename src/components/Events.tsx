@@ -9,6 +9,7 @@ import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
+import { GoDash } from "react-icons/go";
 
 type UpcomingItem = { image: string; title: string; date: string };
 type PastItem = {
@@ -32,7 +33,6 @@ const Events = () => {
     { title: t("events.t3") },
   ];
   const [openIndex, setOpenIndex] = useState<number | null>(1);
-  const [isMobile, setIsMobile] = useState(false);
 
   const [selectedUpcoming, setSelectedUpcoming] = useState<number>(0);
   const [selectedPast, setSelectedPast] = useState<number>(0);
@@ -57,7 +57,6 @@ const Events = () => {
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 639px)");
     const handleResize = () => {
-      setIsMobile(mediaQuery.matches);
       if (!mediaQuery.matches && openIndex === null) setOpenIndex(0);
     };
     handleResize();
@@ -66,12 +65,8 @@ const Events = () => {
   }, [openIndex]);
 
   const handleToggle = (index: number) => {
-    if (isMobile) {
-      if (openIndex === index) setOpenIndex((index + 1) % accordionData.length);
-      else setOpenIndex(index);
-    } else {
-      setOpenIndex(index);
-    }
+    if (openIndex === index) setOpenIndex((index + 1) % accordionData.length);
+    else setOpenIndex(index);
   };
 
   useEffect(() => {
@@ -171,7 +166,7 @@ const Events = () => {
 
   return (
     <div className="h-fit w-full flex items-center justify-center sm:py-15 ">
-      <div className="flex mx-auto px-8 w-full xl:w-[85vw] max-w-6xl p-6 lg:p-10 xl:rounded-4xl bg-black justify-between gap-10 items-center ">
+      <div className="flex mx-auto px-8 w-full xl:w-[85vw] max-w-6xl p-6 sm:p-15 xl:p-10 sm:rounded-4xl bg-black justify-between gap-10 items-center ">
         <div className="w-full h-full xl:w-md rounded-lg text-white flex flex-col justify-between">
           {accordionData.map((item, idx) => {
             const isOpen = openIndex === idx;
@@ -182,9 +177,10 @@ const Events = () => {
               >
                 <button
                   onClick={() => handleToggle(idx)}
-                  className="flex justify-between items-center w-full py-2 lg:py-4 text-left font-semibold"
+                  className="flex justify-between items-center w-full py-2 sm:py-5 xl:py-4 text-left font-semibold"
                 >
-                  <span className="text-[1.5rem] sm:text-[0.9rem] lg:text-lg">
+                  <span className="text-[1.5rem] sm:text-lg">
+                    <span className="pe-10 hidden sm:inline xl:hidden">-</span>
                     {item.title}
                   </span>
                   <motion.div
@@ -264,7 +260,7 @@ const Events = () => {
                           </div>
                           <img
                             src={toSrc(data.img)}
-                            className="xl:hidden my-7 rounded-xl"
+                            className="xl:hidden my-7 rounded-4xl"
                             alt="event"
                           />
                         </div>
@@ -272,7 +268,13 @@ const Events = () => {
 
                       {idx === 1 && (
                         <div>
-                          <ol className="h-[220px] list-decimal list-inside pl-2 pb-4 text-neutral-400 space-y-1 overflow-y-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                          <ol
+                            className="h-[220px] list-decimal list-inside pl-2 pb-4\
+                             text-neutral-400 space-y-1 overflow-y-scroll  [&::-webkit-scrollbar]:block! [&::-webkit-scrollbar]:w-1!
+                             [&::-webkit-scrollbar-thumb]:bg-gray-600!
+                               [&::-webkit-scrollbar-thumb]:rounded-full!
+                               [&::-webkit-scrollbar-track]:bg-transparent!"
+                          >
                             {data.upcoming.length === 0 ? (
                               <li className="text-neutral-500">
                                 No upcoming events.
@@ -282,7 +284,7 @@ const Events = () => {
                                 <li
                                   key={i}
                                   onClick={() => setSelectedUpcoming(i)}
-                                  className={`text-[#FF8127] xl:text-lg cursor-pointer ${
+                                  className={`text-[#FF8127] cursor-pointer py-1 xl:py-0 ps-0 sm:ps-20 xl:ps-0 ${
                                     selectedUpcoming === i
                                       ? "opacity-100"
                                       : "opacity-80"
@@ -294,18 +296,18 @@ const Events = () => {
                             )}
                           </ol>
 
-                          <div className="xl:hidden my-4">
+                          <div className="xl:hidden my-7">
                             {data.upcoming[selectedUpcoming]?.image ? (
                               <img
                                 src={data.upcoming[selectedUpcoming].image}
                                 alt="upcoming mobile"
-                                className="w-full rounded-xl object-cover"
+                                className="w-full rounded-4xl object-cover"
                               />
                             ) : (
                               <img
                                 src={toSrc(data.img)}
                                 alt="upcoming placeholder"
-                                className="w-full rounded-xl object-cover"
+                                className="w-full rounded-4xl object-cover"
                               />
                             )}
                           </div>
@@ -314,7 +316,12 @@ const Events = () => {
 
                       {idx === 2 && (
                         <div>
-                          <ol className="h-[220px] list-decimal list-inside pl-2 pb-4 text-neutral-400 space-y-1 overflow-y-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                          <ol
+                            className="h-[220px] list-decimal list-inside pl-2 pb-4 text-neutral-400 space-y-1 overflow-y-scroll [&::-webkit-scrollbar]:block! [&::-webkit-scrollbar]:w-1!
+                             [&::-webkit-scrollbar-thumb]:bg-gray-600!
+                               [&::-webkit-scrollbar-thumb]:rounded-full!
+                               [&::-webkit-scrollbar-track]:bg-transparent!"
+                          >
                             {data.past.length === 0 ? (
                               <li className="text-neutral-500">
                                 No past events.
@@ -327,7 +334,7 @@ const Events = () => {
                                     setSelectedPast(i);
                                     openPastPopup(i);
                                   }}
-                                  className={`text-[#FF8127] xl:text-lg cursor-pointer ${
+                                  className={`text-[#FF8127] py-1 xl:py-0 cursor-pointer ps-0 sm:ps-20 xl:ps-0 ${
                                     selectedPast === i
                                       ? "opacity-100"
                                       : "opacity-100"
@@ -339,12 +346,12 @@ const Events = () => {
                             )}
                           </ol>
 
-                          <div className="xl:hidden my-4">
+                          <div className="xl:hidden my-7">
                             {data.past[selectedPast]?.image ? (
                               <img
                                 src={data.past[selectedPast].image}
                                 alt="past mobile"
-                                className="w-full rounded-xl object-cover cursor-pointer"
+                                className="w-full rounded-4xl object-cover cursor-pointer"
                                 onClick={() => {
                                   openPastPopup(selectedPast);
                                 }}
@@ -353,7 +360,7 @@ const Events = () => {
                               <img
                                 src={toSrc(data.img)}
                                 alt="past placeholder"
-                                className="w-full rounded-xl object-cover"
+                                className="w-full rounded-4xl object-cover"
                               />
                             )}
                           </div>

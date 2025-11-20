@@ -3,6 +3,7 @@ import axios from "axios";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { GoDash } from "react-icons/go";
 
 const Darshan = () => {
   const t = useTranslations();
@@ -47,13 +48,12 @@ const Darshan = () => {
   }, []);
 
   return (
-    <div className="w-full sm:bg-black flex items-center justify-center">
-      <div className="w-[90vw] sm:w-[85vw] max-w-7xl mx-auto flex-col xl:flex-row flex  justify-between bg-[#1d1d1f] sm:p-3 lg:p-7 my-15 gap-5 rounded-4xl">
-        <div className=" text-white px-3 sm:p-3 xl:py-7 xl:p-8 xl:w-md ">
-          <h2 className="text-3xl text-center xl:text-left sm:text-2xl xl:text-3xl font-bold text-orange-500 mb-4 sm:mb-8 uppercase">
+    <div className="w-full xl:bg-black flex items-center justify-center">
+      <div className="w-[90vw] sm:w-[95vw] max-w-7xl mx-auto flex-col xl:flex-row flex  justify-between bg-[#1d1d1f] xl:p-7 my-15 gap-5 rounded-4xl">
+        <div className=" text-white px-3 sm:p-0 xl:py-7 xl:p-8 xl:w-md ">
+          <h2 className="text-3xl text-center xl:text-left sm:text-4xl xl:text-3xl font-bold text-orange-500 mb-4 sm:mb-8 uppercase">
             {t("darshan.time")}
           </h2>
-
           <ul className="space-y-6 text-neutral-100 sm:hidden xl:block">
             <li className="border-b border-b-white/15 pb-4">
               <p className="font-semibold text-[1.1rem] sm:text-[0.8rem] lg:text-lg">
@@ -70,14 +70,6 @@ const Darshan = () => {
             </li>
             <li className="border-b border-b-white/15 pb-4">
               <p className="font-semibold text-[1.1rem] sm:text-[0.8rem] lg:text-lg">
-                {t("darshan.t2")}
-              </p>
-              <p className="mt-2 text-neutral-400  ps-4 lg:ps-10 text-[1rem] sm:text-[0.65rem] lg:text-lg">
-                {data.himalaya_closing_time}
-              </p>
-            </li>
-            <li>
-              <p className="font-semibold text-[1.1rem] sm:text-[0.8rem] lg:text-lg">
                 {t("darshan.t3")}
               </p>
               <ul className="mt-2 text-neutral-400 space-y-1">
@@ -89,45 +81,62 @@ const Darshan = () => {
                 </li>
               </ul>
             </li>
-          </ul>
-
-          <ul className="text-neutral-100 hidden sm:flex flex-row xl:hidden">
-            <li className="border-e border-e-white me-4 lg:me-10 flex-1 pe-1">
-              <p className="font-semibold text-[1rem]">{t("darshan.t1")}</p>
-              <ul className="mt-2 text-neutral-400 space-y-1">
-                <li className="lg:ps-10 text-[0.8rem] lg:text-[1rem]">
-                  {data.schedule_line1}
-                </li>
-                <li className="lg:ps-10 text-[0.8rem] lg:text-[1rem]">
-                  {data.schedule_line2}
-                </li>
-              </ul>
-            </li>
-            <li className="border-e border-e-white me-4 lg:me-10 flex-1">
-              <p className="font-semibold text-[1rem]">{t("darshan.t2")}</p>
-              <p className="mt-2 text-neutral-400  lg:ps-10 text-[0.8rem] lg:text-[1rem]">
+            <li>
+              <p className="font-semibold text-[1.1rem] sm:text-[0.8rem] lg:text-lg">
+                {t("darshan.t2")}
+              </p>
+              <p className="mt-2 text-neutral-400  ps-4 lg:ps-10 text-[1rem] sm:text-[0.65rem] lg:text-lg">
                 {data.himalaya_closing_time}
               </p>
             </li>
-            <li className="">
-              <p className="font-semibold text-[1rem]">{t("darshan.t3")}</p>
-              <ul className="mt-2 text-neutral-400 space-y-1 pt-5">
-                <li className="lg:ps-10 text-[0.8rem] lg:text-[1rem]">
+          </ul>
+
+          <ul className="text-white hidden sm:flex flex-row xl:hidden w-full divide-x divide-whit mb-5 px-5">
+            <div className="w-[36%] pe-3">
+              <li className="list-disc ms-4 text-[1rem] mb-2">
+                {t("darshan.t1")}
+              </li>
+              <ul className="text-neutral-200 space-y-1">
+                <li className="text-[0.9rem] lg:text-[1rem]">
+                  {data.schedule_line1}
+                </li>
+                <li className="text-[0.9rem] lg:text-[1rem]">
+                  {data.schedule_line2}
+                </li>
+              </ul>
+            </div>
+            <div className="w-[36%] px-5">
+              <li className="list-disc ms-4 text-[1rem] mb-2">
+                {t("darshan.t3")}
+              </li>
+              <ul className="text-neutral-200 space-y-1 pt-6">
+                <li className="text-[0.9rem] lg:text-[1rem]">
                   {data.aarti_time1}
                 </li>
-                <li className="lg:ps-10 text-[0.8rem] lg:text-[1rem]">
+                <li className="text-[0.9rem] lg:text-[1rem]">
                   {data.aarti_time2}
                 </li>
               </ul>
-            </li>
+            </div>
+            <div className="w-[25%] ps-5">
+              <li className="list-disc ms-4 text-[1rem] mb-2">
+                {t("darshan.t2")}
+              </li>
+              <p className="text-neutral-200 text-[0.9rem] lg:text-[1rem] mt-2">
+                {data.himalaya_closing_time}
+              </p>
+            </div>
           </ul>
         </div>
 
         <div className="sm:bg-black text-white sm:p-8 lg:px-10 xl:p-7 pt-10 sm:pt-4 rounded-4xl w-full ">
-          <h2 className="text-3xl text-center xl:text-left sm:text-2xl xl:text-3xl font-bold text-orange-500 mb-4 xl:mb-8 uppercase">
+          <h2 className="text-3xl text-center xl:text-left sm:text-4xl xl:text-3xl font-bold text-orange-500 my-5 xl:mb-8 xl:mt-0 uppercase">
             {t("darshan.rules")}
           </h2>
-          <p className="font-bold text-white mb-4 text-[1.1rem] sm:text-[1rem] lg:text-[1.3rem] xl:text-lg">
+          <p className="font-bold text-white mb-4 text-[1.1rem] sm:text-[1rem] lg:text-[1.3rem] xl:text-lg sm:mb-7 xl:mb-4">
+            <span className="pe-2 hidden sm:inline xl:hidden">
+              <GoDash className="inline" />
+            </span>{" "}
             {t("darshan.p1")}
           </p>
 

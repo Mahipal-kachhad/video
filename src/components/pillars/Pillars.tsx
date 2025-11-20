@@ -74,7 +74,7 @@ const Pillars = () => {
           0: {
             initialSlide: 0,
           },
-          436: {
+          1024: {
             initialSlide: 1,
           },
         }}
@@ -94,7 +94,7 @@ const Pillars = () => {
               <h3 className="font-bold text-xl lg:text-2xl mt-3 lg:mt-5 mb-4">
                 {val.title}
               </h3>
-              <p className="text-[0.75rem] leading-6 lg:text-sm lg:leading-6 line-clamp-3 tracking-wide text-justify [word-spacing:2px]">
+              <p className="text-[0.75rem] leading-6 sm:text-sm lg:leading-6 line-clamp-3 tracking-wide text-justify [word-spacing:2px]">
                 {val.content}
               </p>
 
