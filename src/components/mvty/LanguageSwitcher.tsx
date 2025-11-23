@@ -35,7 +35,7 @@ export default function LanguageSwitcher() {
         onClick={() => setOpen((v) => !v)}
         tabIndex={0}
       >
-        <Image src="/icons/lang.svg" alt="Language" width={60} height={60} />
+        <Image src="/icons/lang.svg" alt="Language" width={60} height={60} loading="eager"/>
       </button>
       <AnimatePresence>
         {open && (

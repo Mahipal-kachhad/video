@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  
 };
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');

@@ -17,6 +17,8 @@ import VitthalbhaiBio from "@/components/sreeVitthalbhai/VitthalbhaiBio";
 import VideoGalaxy from "@/components/videoAnimation/VideoGalaxy";
 import { Toaster } from "react-hot-toast";
 import GallerySlider from "@/components/mvty/GallerySlider";
+import MainEntry from "@/components/pillars/3dPillars/MainEntry";
+import ScrollToTop from "@/components/mvty/ScrollToTop";
 
 export default async function HomePage({
   params,
@@ -39,6 +41,7 @@ export default async function HomePage({
         <DhamInfo />
         <Dham2 />
         <Pillars />
+        <MainEntry />
         <GallerySlider />
         <Events />
         <Quotes />
@@ -46,6 +49,7 @@ export default async function HomePage({
         <Map />
         <Contact />
         <Footer />
+        <ScrollToTop />
         <Toaster position="top-center" reverseOrder={false} />
       </div>
     </>
