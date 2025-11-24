@@ -47,6 +47,9 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
 
+  // NEW: Check if ANY menu is open
+  const isMenuOpen = isSidebarOpen || isInfoOpen;
+
   const [isAutoRotating, setIsAutoRotating] = useState(false);
 
   const targetFov = useRef(60);
@@ -59,6 +62,18 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   const currentScene = data[currentSceneId];
+
+  // --- HANDLERS ---
+  const handleBgClick = (e: any) => {
+    if (isMenuOpen) {
+      setIsSidebarOpen(false);
+      setIsInfoOpen(false);
+    }
+  };
+
+  const handleUIInteraction = (e: React.PointerEvent | React.WheelEvent) => {
+    e.stopPropagation();
+  };
 
   const transitionToScene = (
     targetId: string,
@@ -184,7 +199,13 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
         autoRotate={isAutoRotating}
         autoRotateSpeed={0.5}
       />
-      <SphereModel texture={mainTexture} opacity={1} renderOrder={0} />
+
+      <SphereModel
+        texture={mainTexture}
+        opacity={1}
+        renderOrder={0}
+        onPointerDown={handleBgClick}
+      />
 
       {prevTexture && (
         <SphereModel
@@ -192,17 +213,39 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
           texture={prevTexture}
           opacity={1}
           renderOrder={1}
+          onPointerDown={handleBgClick}
         />
       )}
 
-      {/* --- UI LAYER --- */}
-      <Html fullscreen style={{ pointerEvents: "none" }} zIndexRange={[100, 0]}>
-        {/* --- LEFT SIDEBAR TOGGLE --- */}
+      {/* --- HOTSPOTS --- */}
+      {!isTransitioning &&
+        currentScene.hotspots.map((spot, index) => (
+          <Hotspot
+            key={index}
+            x={spot.x}
+            y={spot.y}
+            z={spot.z}
+            label={spot.label}
+            img={spot.img}
+            onClick={() => handleHotspotClick(spot.target)}
+            onZoom={handleZoom}
+            // PASS THE MENU STATE DOWN
+            isMenuOpen={isMenuOpen}
+          />
+        ))}
+
+      {/* --- UI LAYERS --- */}
+      <Html
+        fullscreen
+        style={{ pointerEvents: "none", zIndex: 100000 }}
+        zIndexRange={[100000, 100000]}
+      >
+        {/* Left Sidebar Toggle */}
         <div
-          className={`
-            absolute top-5 left-5 pointer-events-auto z-50 transition-transform duration-300 ease-in-out
-            ${isSidebarOpen ? "translate-x-50" : "translate-x-0"}
-          `}
+          className={`absolute top-5 left-5 pointer-events-auto z-50 transition-transform duration-300 ease-in-out ${
+            isSidebarOpen ? "translate-x-45" : "translate-x-0"
+          }`}
+          onPointerDown={handleUIInteraction}
         >
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -217,22 +260,18 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
                 width={iconWidth}
               />
             ) : (
-              <img
-                src="/icons/pa-open.svg"
-                alt="open"
-                className=""
-                width={iconWidth}
-              />
+              <img src="/icons/pa-open.svg" alt="open" width={iconWidth} />
             )}
           </button>
         </div>
 
-        {/* --- LEFT SIDEBAR CONTENT --- */}
+        {/* Left Sidebar Content */}
         <div
-          className={`
-            absolute top-0 left-0 h-full w-50 transition-transform duration-300 ease-in-out pointer-events-auto flex flex-col z-40
-            ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
-          `}
+          className={`absolute top-0 left-0 h-full w-45 transition-transform duration-300 ease-in-out pointer-events-auto flex flex-col z-40 ${
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+          onPointerDown={handleUIInteraction}
+          onWheel={handleUIInteraction}
         >
           <div className="flex-1 overflow-y-auto ps-4 pt-4 space-y-2">
             {sceneKeys.map((key) => (
@@ -242,14 +281,9 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
                   transitionToScene(key, true);
                   setIsSidebarOpen(false);
                 }}
-                className={` 
-                   w-full text-left px-4 py-3 rounded-xl transition-all flex items-center gap-3 text-white font-bold
-                   ${
-                     currentSceneId === key
-                       ? "bg-[#464646] "
-                       : "bg-[#464646]/70"
-                   }
-                 `}
+                className={`w-full text-left px-4 py-3 rounded-xl transition-all flex items-center gap-3 text-white font-bold ${
+                  currentSceneId === key ? "bg-[#464646]" : "bg-[#464646]/70"
+                }`}
               >
                 <span>{key.charAt(0).toUpperCase() + key.slice(1)}</span>
               </button>
@@ -257,17 +291,12 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
           </div>
         </div>
 
-        {/* --- RIGHT INFO BUTTON --- */}
-        {/* FIX: Added transition-transform and conditional translation based on isInfoOpen */}
+        {/* Right Info Toggle */}
         <div
-          className={`
-            absolute top-1/2 -translate-y-1/2 right-5 pointer-events-auto z-50 transition-transform duration-300 ease-in-out
-            ${
-              isInfoOpen
-                ? "-translate-x-70 sm:-translate-x-120"
-                : "translate-x-0"
-            }
-          `}
+          className={`absolute top-1/2 -translate-y-1/2 right-5 pointer-events-auto z-50 transition-transform duration-300 ease-in-out ${
+            isInfoOpen ? "-translate-x-70 sm:-translate-x-120" : "translate-x-0"
+          }`}
+          onPointerDown={handleUIInteraction}
         >
           <button
             onClick={() => setIsInfoOpen(!isInfoOpen)}
@@ -282,25 +311,29 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
           </button>
         </div>
 
-        {/* --- RIGHT INFO SIDEBAR --- */}
+        {/* Right Info Content */}
         <div
-          className={`
-            absolute top-0 right-0 h-full w-70 sm:w-120 bg-[black]/90 rounded-2xl transition-transform duration-300 ease-in-out pointer-events-auto flex flex-col z-40
-            ${isInfoOpen ? "translate-x-0" : "translate-x-full"}
-          `}
+          className={`absolute top-0 right-0 h-full w-70 sm:w-120 bg-[black]/90 rounded-2xl transition-transform duration-300 ease-in-out pointer-events-auto flex flex-col z-40 ${
+            isInfoOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+          onPointerDown={handleUIInteraction}
+          onWheel={handleUIInteraction}
         >
           <div className="p-6 mt-16 border-b border-white/10">
             <h2 className="text-white text-xl font-bold tracking-wide">
               {currentScene.title}
             </h2>
           </div>
-
           <div className="flex-1 overflow-y-auto p-6 text-gray-300 leading-relaxed space-y-4">
             {currentScene.content}
           </div>
         </div>
 
-        <div className="absolute bottom-30 left-10 sm:left-30 -translate-x-1/2 pointer-events-auto z-10">
+        {/* Controls */}
+        <div
+          className="absolute bottom-25 left-10 sm:left-30 -translate-x-1/2 pointer-events-auto z-10"
+          onPointerDown={handleUIInteraction}
+        >
           <button
             onClick={handlePrev}
             disabled={isPrevDisabled}
@@ -310,7 +343,10 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
             <img src="/icons/pa-prev.svg" alt="prev" width={iconWidth} />
           </button>
         </div>
-        <div className="absolute bottom-30 right-10 sm:right-30 translate-x-1/2 flex justify-between pointer-events-auto z-10">
+        <div
+          className="absolute bottom-25 right-10 sm:right-30 translate-x-1/2 flex justify-between pointer-events-auto z-10"
+          onPointerDown={handleUIInteraction}
+        >
           <button
             onClick={handleNext}
             disabled={isNextDisabled}
@@ -320,24 +356,25 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
             <img src="/icons/pa-next.svg" alt="next" width={iconWidth} />
           </button>
         </div>
-
-        <div className="absolute bottom-5 left-1/2 w-fit transform -translate-x-1/2 flex gap-3 justify-between pointer-events-auto z-10">
+        <div
+          className="absolute bottom-5 left-1/2 w-fit transform -translate-x-1/2 flex gap-3 justify-between pointer-events-auto z-10"
+          onPointerDown={handleUIInteraction}
+        >
           <button
             onClick={handleBack}
             disabled={isBackDisabled}
             className={iconStyle}
-            title="Go Back (History)"
+            title="Go Back"
           >
             <img src="/icons/pa-back.svg" alt="back" width={iconWidth} />
           </button>
-
           <button onClick={handleZoomIn} className={iconStyle} title="Zoom In">
             <img src="/icons/pa-zoomin.svg" alt="zoom in" width={iconWidth} />
           </button>
           <button
             onClick={() => setIsAutoRotating(!isAutoRotating)}
             className={iconStyle}
-            title={isAutoRotating ? "Pause Rotation" : "Auto Rotate"}
+            title="Auto Rotate"
           >
             {isAutoRotating ? (
               <img src="/icons/pa-pose.svg" alt="pose" width={iconWidth} />
@@ -354,21 +391,6 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
           </button>
         </div>
       </Html>
-
-      {!isTransitioning &&
-        currentScene.hotspots.map((spot, index) => (
-          <Hotspot
-            key={index}
-            x={spot.x}
-            y={spot.y}
-            z={spot.z}
-            label={spot.label}
-            img={spot.img}
-            onClick={() => handleHotspotClick(spot.target)}
-            onZoom={handleZoom}
-            sceneData={data}
-          />
-        ))}
     </>
   );
 };

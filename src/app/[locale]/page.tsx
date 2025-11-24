@@ -32,7 +32,7 @@ export default async function HomePage({
     <>
       {/* <VideoGalaxy /> */}
       <div className="bg-[#1D1D1F] min-h-screen">
-        <AboutMVTY />
+        {/* <AboutMVTY />
         <MaaVishvambhari />
         <GlimpsOfMaa />
         <SreeVitthalbhai />
@@ -40,16 +40,16 @@ export default async function HomePage({
         <VideoModel />
         <DhamInfo />
         <Dham2 />
-        <Pillars />
+        <Pillars /> */}
         <MainEntry />
-        <GallerySlider />
+        {/* <GallerySlider />
         <Events />
         <Quotes />
         <Darshan />
         <Map />
         <Contact />
         <Footer />
-        <ScrollToTop />
+        <ScrollToTop /> */}
         <Toaster position="top-center" reverseOrder={false} />
       </div>
     </>

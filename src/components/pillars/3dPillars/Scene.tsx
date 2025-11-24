@@ -336,7 +336,7 @@ const Scene = () => {
         id: "vaikunthdham",
         content: pillarsContent[4].content,
         title: pillarsContent[4].title,
-        texture: "/images/img1.jpg",
+        texture: "/images/img5.jpg",
         hotspots: [
           {
             x: 0,
@@ -398,7 +398,7 @@ const Scene = () => {
         id: "panchvati",
         content: pillarsContent[5].content,
         title: pillarsContent[5].title,
-        texture: "/images/img2.jpg",
+        texture: "/images/img6.jpg",
         hotspots: [
           {
             x: 0,
@@ -460,7 +460,7 @@ const Scene = () => {
         id: "prakrutiVan",
         content: pillarsContent[6].content,
         title: pillarsContent[6].title,
-        texture: "/images/img3.jpg",
+        texture: "/images/img7.jpg",
         hotspots: [
           {
             x: 0,
