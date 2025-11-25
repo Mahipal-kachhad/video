@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BiChevronUp } from "react-icons/bi";
 import { FaArrowUpLong } from "react-icons/fa6";
 
 const ScrollToTop = () => {
@@ -30,12 +29,12 @@ const ScrollToTop = () => {
         <button
           onClick={scrollToTop}
           className="
-            fixed bottom-5 right-5 
+            fixed bottom-20 right-5 
             bg-gray-700/90 text-white 
             w-12 h-12 
             flex items-center justify-center 
             rounded-full shadow-lg 
-            hover:bg-gray-700/90 
+            hover:bg-gray-700/90
             transition-all 
             active:scale-95 backdrop-blur z-100
           "

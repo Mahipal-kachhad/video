@@ -19,6 +19,8 @@ import { Toaster } from "react-hot-toast";
 import GallerySlider from "@/components/mvty/GallerySlider";
 import MainEntry from "@/components/pillars/3dPillars/MainEntry";
 import ScrollToTop from "@/components/mvty/ScrollToTop";
+import Gallery from "@/components/gallary/Gallery";
+import Chat from "@/components/chat/Chat";
 
 export default async function HomePage({
   params,
@@ -32,7 +34,7 @@ export default async function HomePage({
     <>
       {/* <VideoGalaxy /> */}
       <div className="bg-[#1D1D1F] min-h-screen">
-        {/* <AboutMVTY />
+        <AboutMVTY />
         <MaaVishvambhari />
         <GlimpsOfMaa />
         <SreeVitthalbhai />
@@ -40,17 +42,17 @@ export default async function HomePage({
         <VideoModel />
         <DhamInfo />
         <Dham2 />
-        <Pillars /> */}
         <MainEntry />
-        {/* <GallerySlider />
+        <Gallery />
         <Events />
         <Quotes />
         <Darshan />
         <Map />
         <Contact />
         <Footer />
-        <ScrollToTop /> */}
+        <ScrollToTop />
         <Toaster position="top-center" reverseOrder={false} />
+        <Chat />
       </div>
     </>
   );

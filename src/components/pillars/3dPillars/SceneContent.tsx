@@ -43,11 +43,9 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
   const [currentSceneId, setCurrentSceneId] = useState(sceneKeys[0]);
   const [history, setHistory] = useState<string[]>([]);
 
-  // State for Sidebars
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
 
-  // NEW: Check if ANY menu is open
   const isMenuOpen = isSidebarOpen || isInfoOpen;
 
   const [isAutoRotating, setIsAutoRotating] = useState(false);
