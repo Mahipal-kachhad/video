@@ -30,7 +30,7 @@ const Contact = () => {
 
     try {
       const response = await axios.post(
-        `https://dhamadmin.cesihpl.com/api/inquiry_test.php`,
+        `https://dhamadmin.cesihpl.com/api/inquiry_api.php`,
         { email, name, message }
       );
 

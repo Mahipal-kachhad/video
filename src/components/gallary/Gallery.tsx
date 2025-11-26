@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Audio from "./Audio";
 import Video from "./youtube";
+import Photos from "./Photos";
 
 interface Pillar {
   title: string;
@@ -58,7 +59,7 @@ const Gallery = () => {
   }, []);
 
   return (
-    <div>
+    <div className="">
       <div className="flex items-center justify-around pt-10">
         {MENU_ITEMS[menuLang].map((val, idx) => (
           <button
@@ -112,20 +113,13 @@ const Gallery = () => {
             ))}
         </div>
       </div>
-      <div className="p-4 xl:p-7 bg-black max-h-[600px] xl:h-[700px] overflow-y-auto">
+      <div className="pb-3 bg-black overflow-x-auto ">
         {activeMenu === MENU_ITEMS[menuLang][0] && (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-4">
-            {pillarsContent[activePillar]?.sub_images.map((val, idx) => (
-              <img
-                key={idx}
-                src={val.url}
-                alt="pillar Photos"
-                className="rounded-2xl object-center object-cover aspect-3/2"
-              />
-            ))}
-          </div>
+          <Photos images={pillarsContent[activePillar]?.sub_images || []} />
         )}
-        {activeMenu === MENU_ITEMS[menuLang][1] && <Video activeMenu={activeVideoMenu}/>}
+        {activeMenu === MENU_ITEMS[menuLang][1] && (
+          <Video activeMenu={activeVideoMenu} />
+        )}
         {activeMenu === MENU_ITEMS[menuLang][2] && (
           <Audio activeMenu={activeAudioMenu} />
         )}
