@@ -6,19 +6,14 @@ const AudioPlayer = ({ val, idx }: { val: Audio; idx: number }) => {
   const { path, image, title } = val;
   const waveFormRef = useRef<HTMLDivElement>(null!);
   const waveSurfer = useRef<WaveSurfer>(null!);
-
-  // State variables
   const [loading, setLoading] = useState(true);
   const [isDownloading, setIsDownloading] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false); // 1. Track playing state
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     if (!waveFormRef.current) return;
-
     setLoading(true);
-    // Reset playing state if the audio path changes (new track)
     setIsPlaying(false);
-
     const options: WaveSurferOptions = {
       container: waveFormRef.current,
       waveColor: "#999",

@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaCaretLeft, FaCaretRight } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 
@@ -6,15 +6,16 @@ import { Dialog } from "@headlessui/react";
 import { AnimatePresence, motion } from "framer-motion";
 
 export default function Photos({ images }: { images: { url: string }[] }) {
-  const rowRefs: RefObject<HTMLDivElement>[] = [
-    useRef(null!),
-    useRef(null!),
-    useRef(null!),
-  ];
+  // Use a single ref array for better management
+  const rowRefs = useRef<(HTMLDivElement | null)[]>([null, null, null]);
+  
+  // Ref to store scroll controllers (connects buttons to the physics engine)
+  const controllers = useRef<{ [key: number]: (amount: number) => void }>({});
 
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [viewerIndex, setViewerIndex] = useState(0);
 
+  // --- VIEWER LOGIC ---
   const openViewer = (index: number) => {
     setViewerIndex(index);
     setIsViewerOpen(true);
@@ -43,32 +44,24 @@ export default function Photos({ images }: { images: { url: string }[] }) {
     return () => window.removeEventListener("keydown", handler);
   }, [isViewerOpen]);
 
-  const scrollByOne = (index: number, direction: number) => {
-    const el = rowRefs[index].current;
-    if (!el) return;
-    const firstImg = el.querySelector("img");
-    if (!firstImg) return;
-    const imgWidth = firstImg.clientWidth + 16;
-
-    el.scrollTo({
-      left: el.scrollLeft + imgWidth * direction,
-      behavior: "smooth",
-    });
-  };
-
-  // JS-based smooth horizontal scroll ONLY (no vertical fallback)
+  // --- UNIFIED SCROLL ENGINE ---
   useEffect(() => {
     const cleanups: (() => void)[] = [];
 
-    rowRefs.forEach((ref, index) => {
-      const el = ref.current;
+    rowRefs.current.forEach((el, index) => {
       if (!el) return;
 
-      if (index === 1) el.scrollLeft = el.scrollWidth;
-      else el.scrollLeft = 0;
+      // Initial Position Logic
+      if (index === 1) {
+        // Middle row starts at the end
+        el.scrollLeft = el.scrollWidth;
+      } else {
+        el.scrollLeft = 0;
+      }
 
-      let isAnimating = false;
+      // Physics State
       let targetScroll = el.scrollLeft;
+      let isAnimating = false;
       let rafId: number | null = null;
 
       const clamp = (v: number) =>
@@ -76,7 +69,9 @@ export default function Photos({ images }: { images: { url: string }[] }) {
 
       const smoothStep = () => {
         const diff = targetScroll - el.scrollLeft;
-        if (Math.abs(diff) < 0.5) {
+        
+        // Stop if close enough
+        if (Math.abs(diff) < 1) {
           el.scrollLeft = targetScroll;
           isAnimating = false;
           if (rafId) {
@@ -86,35 +81,65 @@ export default function Photos({ images }: { images: { url: string }[] }) {
           return;
         }
 
-        el.scrollLeft += diff * 0.15;
+        // Friction (0.2 matches your Video component feel)
+        el.scrollLeft += diff * 0.2;
         rafId = requestAnimationFrame(smoothStep);
       };
 
-      const handler = (e: WheelEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        const direction = index === 1 ? -1 : 1;
-        const speedMultiplier = 1.8;
-
-        targetScroll = clamp(
-          targetScroll + e.deltaY * direction * speedMultiplier
-        );
-
+      // The Mover Function (Used by Wheel AND Button)
+      const moveScroll = (delta: number) => {
+        targetScroll = clamp(targetScroll + delta);
         if (!isAnimating) {
           isAnimating = true;
           smoothStep();
         }
       };
 
-      el.addEventListener("wheel", handler, { passive: false });
-      cleanups.push(() => el.removeEventListener("wheel", handler));
-      cleanups.push(() => rafId && cancelAnimationFrame(rafId));
+      // 1. Wheel Handler
+      const wheelHandler = (e: WheelEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Row 1 (Index 1) is inverted direction on wheel
+        const direction = index === 1 ? -1 : 1;
+        const speedMultiplier = 2.0;
+
+        moveScroll(e.deltaY * direction * speedMultiplier);
+      };
+
+      el.addEventListener("wheel", wheelHandler, { passive: false });
+
+      // 2. Controller for Buttons
+      controllers.current[index] = (amount: number) => {
+        // Sync target with current position first to avoid jumps
+        if (!isAnimating) targetScroll = el.scrollLeft;
+        moveScroll(amount);
+      };
+
+      cleanups.push(() => {
+        el.removeEventListener("wheel", wheelHandler);
+        if (rafId) cancelAnimationFrame(rafId);
+        delete controllers.current[index];
+      });
     });
 
     return () => cleanups.forEach((fn) => fn());
   }, [images]);
 
+  // --- BUTTON CLICK HANDLER ---
+  const handleScrollClick = (index: number, direction: number) => {
+    const el = rowRefs.current[index];
+    if (!el || !controllers.current[index]) return;
+
+    // Calculate dynamic width based on the first image found
+    const firstImg = el.querySelector("img");
+    const scrollAmount = firstImg ? firstImg.clientWidth + 16 : 300; // width + gap
+
+    // Call the controller
+    controllers.current[index](scrollAmount * direction);
+  };
+
+  // --- RENDERING HELPERS ---
   const chunk = Math.ceil(images.length / 3);
   const rows = [
     images.slice(0, chunk),
@@ -128,27 +153,30 @@ export default function Photos({ images }: { images: { url: string }[] }) {
     <>
       <div className="flex flex-col gap-4 relative w-full">
         {rows.map((rowImgs, i) => (
-          <div key={i} className="relative">
+          <div key={i} className="relative group">
+            
+            {/* Left Button (Only Middle Row) */}
             {i === 1 && (
               <button
-                onClick={() => scrollByOne(i, -1)}
-                className="absolute left-5 top-1/2 -translate-y-1/2 z-20 bg-black/80 text-white w-8 h-8 flex items-center justify-center rounded-full"
+                onClick={() => handleScrollClick(i, -1)}
+                className="absolute left-5 top-1/2 -translate-y-1/2 z-20 bg-black/80 text-white w-10 h-10 flex items-center justify-center rounded-full hover:bg-white hover:text-black transition cursor-pointer active:scale-90"
               >
-                <FaCaretLeft size={20} />
+                <FaCaretLeft size={22} />
               </button>
             )}
 
+            {/* Right Button (Top and Bottom Rows) */}
             {i !== 1 && (
               <button
-                onClick={() => scrollByOne(i, 1)}
-                className="absolute right-5 top-1/2 -translate-y-1/2 z-20 bg-black/80 text-white w-8 h-8 flex items-center justify-center rounded-full"
+                onClick={() => handleScrollClick(i, 1)}
+                className="absolute right-5 top-1/2 -translate-y-1/2 z-20 bg-black/80 text-white w-10 h-10 flex items-center justify-center rounded-full hover:bg-white hover:text-black transition cursor-pointer active:scale-90"
               >
-                <FaCaretRight size={20} />
+                <FaCaretRight size={22} />
               </button>
             )}
 
             <div
-              ref={rowRefs[i]}
+              ref={(el) => { rowRefs.current[i] = el; }}
               className="flex gap-4 overflow-x-auto no-scrollbar px-2"
             >
               {rowImgs.map((item, idx) => {
@@ -176,10 +204,11 @@ export default function Photos({ images }: { images: { url: string }[] }) {
             className="fixed inset-0 z-200 flex items-center justify-center"
           >
             <motion.div
-              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+              className="absolute inset-0 bg-black/90 backdrop-blur-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              onClick={closeViewer}
             />
 
             <motion.img
@@ -189,26 +218,26 @@ export default function Photos({ images }: { images: { url: string }[] }) {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.25 }}
-              className="relative z-220 max-w-[90vw] max-h-[90vh] object-contain rounded-xl"
+              className="relative z-220 max-w-[90vw] max-h-[90vh] object-contain rounded-xl shadow-2xl"
             />
 
             <button
-              onClick={prevImage}
-              className="absolute left-5 top-1/2 -translate-y-1/2 z-230 text-white p-2 rounded-full text-3xl"
+              onClick={(e) => { e.stopPropagation(); prevImage(); }}
+              className="absolute left-5 top-1/2 -translate-y-1/2 z-230 bg-black/50 hover:bg-white hover:text-black text-white p-3 rounded-full text-2xl transition"
             >
               <FaCaretLeft />
             </button>
 
             <button
-              onClick={nextImage}
-              className="absolute right-5 top-1/2 -translate-y-1/2 z-230 text-white p-2 rounded-full text-3xl"
+              onClick={(e) => { e.stopPropagation(); nextImage(); }}
+              className="absolute right-5 top-1/2 -translate-y-1/2 z-230 bg-black/50 hover:bg-white hover:text-black text-white p-3 rounded-full text-2xl transition"
             >
               <FaCaretRight />
             </button>
 
             <button
               onClick={closeViewer}
-              className="absolute top-5 right-5 z-230 bg-white text-black p-2 rounded-full text-2xl"
+              className="absolute top-5 right-5 z-230 bg-black/50 hover:bg-white hover:text-black text-white p-2 rounded-full text-2xl transition"
             >
               <IoClose />
             </button>

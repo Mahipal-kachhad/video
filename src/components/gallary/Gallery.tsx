@@ -3,8 +3,8 @@ import axios from "axios";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Audio from "./Audio";
-import Video from "./youtube";
 import Photos from "./Photos";
+import Video from "./Video";
 
 interface Pillar {
   title: string;
@@ -25,7 +25,7 @@ const AUDIO_MENU = [
   ["આરતી", "સત્સંગ"],
 ];
 
-const VIDEO_MENU = [["youtube"], ["यूट्यूब"], ["યૂટ્યુબ"]];
+const VIDEO_MENU = [["Youtube"], ["यूट्यूब"], ["યૂટ્યુબ"]];
 
 const Gallery = () => {
   const pathName = usePathname();
