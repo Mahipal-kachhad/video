@@ -41,8 +41,14 @@ export default function Video({ activeMenu }: { activeMenu: number }) {
   const [data, setData] = useState<PlaylistRowData[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+
   const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
   const controllers = useRef<{ [key: number]: (amount: number) => void }>({});
+  
+  // --- NEW: Global Interaction State & Speeds ---
+  const hasUserInteracted = useRef(false); // Stops ALL rows if true
+  const rowSpeeds = useRef<number[]>([]);  // Stores unique speed for each row
+  const rowInView = useRef<{ [key: number]: boolean }>({}); // Track visibility per row
 
   useEffect(() => {
     const fetchAllPlaylists = async () => {
@@ -87,30 +93,71 @@ export default function Video({ activeMenu }: { activeMenu: number }) {
   useEffect(() => {
     const cleanups: (() => void)[] = [];
 
+    // 1. Intersection Observer (Efficiency: only scroll what is seen)
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const index = Number(entry.target.getAttribute("data-index"));
+          rowInView.current[index] = entry.isIntersecting;
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    // 2. Global Stop Function
+    const stopAllAutoScroll = () => {
+      hasUserInteracted.current = true;
+    };
+
     rowRefs.current.forEach((el, index) => {
       if (!el) return;
+
+      observer.observe(el);
+      rowInView.current[index] = false; // Default to invisible
+
+      // --- Assign Unique Speed (Random between 0.3 and 0.7) ---
+      if (!rowSpeeds.current[index]) {
+        rowSpeeds.current[index] = 0.3 + Math.random() * 0.4;
+      }
+
+      // Physics State
       let targetScroll = el.scrollLeft;
-      let isAnimating = false;
-      let rafId: number | null = null;
+      let isAnimating = false; 
+      let physicsRafId: number | null = null;
+      let autoScrollRafId: number | null = null;
 
       const clamp = (v: number) =>
         Math.max(0, Math.min(v, el.scrollWidth - el.clientWidth));
 
+      // --- 3. Auto Scroll Loop ---
+      const runAutoScroll = () => {
+        // Condition: Row visible? Global interaction happened? Physics animating?
+        if (rowInView.current[index] && !hasUserInteracted.current && !isAnimating) {
+           // Use the unique random speed for this row
+           el.scrollLeft += rowSpeeds.current[index];
+           
+           // Sync target so manual interaction doesn't snap back
+           targetScroll = el.scrollLeft;
+        }
+        autoScrollRafId = requestAnimationFrame(runAutoScroll);
+      };
+      
+      runAutoScroll();
+
+      // --- 4. Physics / Interaction Logic ---
       const smoothStep = () => {
         const diff = targetScroll - el.scrollLeft;
-
         if (Math.abs(diff) < 1) {
           el.scrollLeft = targetScroll;
           isAnimating = false;
-          if (rafId) {
-            cancelAnimationFrame(rafId);
-            rafId = null;
+          if (physicsRafId) {
+            cancelAnimationFrame(physicsRafId);
+            physicsRafId = null;
           }
           return;
         }
-
         el.scrollLeft += diff * 0.2;
-        rafId = requestAnimationFrame(smoothStep);
+        physicsRafId = requestAnimationFrame(smoothStep);
       };
 
       const moveScroll = (delta: number) => {
@@ -121,27 +168,41 @@ export default function Video({ activeMenu }: { activeMenu: number }) {
         }
       };
 
+      // Handlers
       const wheelHandler = (e: WheelEvent) => {
         e.preventDefault();
         e.stopPropagation();
+        stopAllAutoScroll(); // <--- STOP ALL
         moveScroll(e.deltaY * 2.5);
       };
 
+      const touchHandler = () => {
+        stopAllAutoScroll(); // <--- STOP ALL
+      };
+
       el.addEventListener("wheel", wheelHandler, { passive: false });
+      el.addEventListener("touchstart", touchHandler, { passive: true });
 
       controllers.current[index] = (amount: number) => {
+        stopAllAutoScroll(); // <--- STOP ALL
         if (!isAnimating) targetScroll = el.scrollLeft;
         moveScroll(amount);
       };
 
       cleanups.push(() => {
         el.removeEventListener("wheel", wheelHandler);
-        if (rafId) cancelAnimationFrame(rafId);
+        el.removeEventListener("touchstart", touchHandler);
+        if (physicsRafId) cancelAnimationFrame(physicsRafId);
+        if (autoScrollRafId) cancelAnimationFrame(autoScrollRafId);
         delete controllers.current[index];
+        observer.unobserve(el);
       });
     });
 
-    return () => cleanups.forEach((fn) => fn());
+    return () => {
+        observer.disconnect();
+        cleanups.forEach((fn) => fn());
+    };
   }, [data]);
 
   const handleNextClick = (index: number) => {
@@ -165,6 +226,7 @@ export default function Video({ activeMenu }: { activeMenu: number }) {
             </button>
 
             <div
+              data-index={i}
               ref={(el) => {
                 rowRefs.current[i] = el;
               }}
@@ -192,7 +254,12 @@ export default function Video({ activeMenu }: { activeMenu: number }) {
                 return (
                   <div
                     key={video.snippet.resourceId?.videoId}
-                    onClick={() => videoId && setSelectedVideo(videoId)}
+                    onClick={() => {
+                        videoId && setSelectedVideo(videoId);
+                        // Optional: Clicking a video also counts as interaction?
+                        // If yes, uncomment next line:
+                        // hasUserInteracted.current = true; 
+                    }}
                     className="relative shrink-0 w-[280px] h-40 rounded-2xl overflow-hidden cursor-pointer hover:scale-[1.02] transition-transform duration-300 border border-white/5 bg-[#121212]"
                   >
                     <img

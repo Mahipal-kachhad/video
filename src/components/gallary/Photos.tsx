@@ -6,16 +6,16 @@ import { Dialog } from "@headlessui/react";
 import { AnimatePresence, motion } from "framer-motion";
 
 export default function Photos({ images }: { images: { url: string }[] }) {
-  // Use a single ref array for better management
   const rowRefs = useRef<(HTMLDivElement | null)[]>([null, null, null]);
-  
-  // Ref to store scroll controllers (connects buttons to the physics engine)
   const controllers = useRef<{ [key: number]: (amount: number) => void }>({});
+
+  const hasUserInteracted = useRef(false);
+  const rowSpeeds = useRef<number[]>([]);
+  const rowInView = useRef<{ [key: number]: boolean }>({});
 
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [viewerIndex, setViewerIndex] = useState(0);
 
-  // --- VIEWER LOGIC ---
   const openViewer = (index: number) => {
     setViewerIndex(index);
     setIsViewerOpen(true);
@@ -33,60 +33,91 @@ export default function Photos({ images }: { images: { url: string }[] }) {
 
   useEffect(() => {
     if (!isViewerOpen) return;
-
     const handler = (e: KeyboardEvent) => {
       if (e.key === "ArrowRight") nextImage();
       if (e.key === "ArrowLeft") prevImage();
       if (e.key === "Escape") closeViewer();
     };
-
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [isViewerOpen]);
 
-  // --- UNIFIED SCROLL ENGINE ---
   useEffect(() => {
     const cleanups: (() => void)[] = [];
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const index = Number(entry.target.getAttribute("data-index"));
+          rowInView.current[index] = entry.isIntersecting;
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const stopAllAutoScroll = () => {
+      hasUserInteracted.current = true;
+    };
 
     rowRefs.current.forEach((el, index) => {
       if (!el) return;
 
-      // Initial Position Logic
+      observer.observe(el);
+      rowInView.current[index] = false;
+
       if (index === 1) {
-        // Middle row starts at the end
         el.scrollLeft = el.scrollWidth;
       } else {
         el.scrollLeft = 0;
       }
 
-      // Physics State
+      if (!rowSpeeds.current[index]) {
+        rowSpeeds.current[index] = 0.3 + Math.random() * 0.4;
+      }
+
       let targetScroll = el.scrollLeft;
       let isAnimating = false;
-      let rafId: number | null = null;
+      let physicsRafId: number | null = null;
+      let autoScrollRafId: number | null = null;
 
       const clamp = (v: number) =>
         Math.max(0, Math.min(v, el.scrollWidth - el.clientWidth));
 
+      const runAutoScroll = () => {
+        if (
+          rowInView.current[index] &&
+          !hasUserInteracted.current &&
+          !isAnimating
+        ) {
+          const speed = rowSpeeds.current[index];
+          if (index === 1) {
+            el.scrollLeft -= speed;
+          } else {
+            el.scrollLeft += speed;
+          }
+          targetScroll = el.scrollLeft;
+        }
+        autoScrollRafId = requestAnimationFrame(runAutoScroll);
+      };
+      runAutoScroll();
+
       const smoothStep = () => {
         const diff = targetScroll - el.scrollLeft;
-        
-        // Stop if close enough
+
         if (Math.abs(diff) < 1) {
           el.scrollLeft = targetScroll;
           isAnimating = false;
-          if (rafId) {
-            cancelAnimationFrame(rafId);
-            rafId = null;
+          if (physicsRafId) {
+            cancelAnimationFrame(physicsRafId);
+            physicsRafId = null;
           }
           return;
         }
 
-        // Friction (0.2 matches your Video component feel)
         el.scrollLeft += diff * 0.2;
-        rafId = requestAnimationFrame(smoothStep);
+        physicsRafId = requestAnimationFrame(smoothStep);
       };
 
-      // The Mover Function (Used by Wheel AND Button)
       const moveScroll = (delta: number) => {
         targetScroll = clamp(targetScroll + delta);
         if (!isAnimating) {
@@ -95,51 +126,56 @@ export default function Photos({ images }: { images: { url: string }[] }) {
         }
       };
 
-      // 1. Wheel Handler
       const wheelHandler = (e: WheelEvent) => {
         e.preventDefault();
         e.stopPropagation();
+        stopAllAutoScroll();
 
-        // Row 1 (Index 1) is inverted direction on wheel
         const direction = index === 1 ? -1 : 1;
         const speedMultiplier = 2.0;
 
         moveScroll(e.deltaY * direction * speedMultiplier);
       };
 
-      el.addEventListener("wheel", wheelHandler, { passive: false });
+      const touchHandler = () => {
+        stopAllAutoScroll();
+      };
 
-      // 2. Controller for Buttons
+      el.addEventListener("wheel", wheelHandler, { passive: false });
+      el.addEventListener("touchstart", touchHandler, { passive: true });
+
       controllers.current[index] = (amount: number) => {
-        // Sync target with current position first to avoid jumps
+        stopAllAutoScroll();
         if (!isAnimating) targetScroll = el.scrollLeft;
         moveScroll(amount);
       };
 
       cleanups.push(() => {
         el.removeEventListener("wheel", wheelHandler);
-        if (rafId) cancelAnimationFrame(rafId);
+        el.removeEventListener("touchstart", touchHandler);
+        if (physicsRafId) cancelAnimationFrame(physicsRafId);
+        if (autoScrollRafId) cancelAnimationFrame(autoScrollRafId);
         delete controllers.current[index];
+        observer.unobserve(el);
       });
     });
 
-    return () => cleanups.forEach((fn) => fn());
+    return () => {
+      observer.disconnect();
+      cleanups.forEach((fn) => fn());
+    };
   }, [images]);
 
-  // --- BUTTON CLICK HANDLER ---
   const handleScrollClick = (index: number, direction: number) => {
     const el = rowRefs.current[index];
     if (!el || !controllers.current[index]) return;
 
-    // Calculate dynamic width based on the first image found
     const firstImg = el.querySelector("img");
-    const scrollAmount = firstImg ? firstImg.clientWidth + 16 : 300; // width + gap
+    const scrollAmount = firstImg ? firstImg.clientWidth + 16 : 300;
 
-    // Call the controller
     controllers.current[index](scrollAmount * direction);
   };
 
-  // --- RENDERING HELPERS ---
   const chunk = Math.ceil(images.length / 3);
   const rows = [
     images.slice(0, chunk),
@@ -154,8 +190,6 @@ export default function Photos({ images }: { images: { url: string }[] }) {
       <div className="flex flex-col gap-4 relative w-full">
         {rows.map((rowImgs, i) => (
           <div key={i} className="relative group">
-            
-            {/* Left Button (Only Middle Row) */}
             {i === 1 && (
               <button
                 onClick={() => handleScrollClick(i, -1)}
@@ -165,7 +199,6 @@ export default function Photos({ images }: { images: { url: string }[] }) {
               </button>
             )}
 
-            {/* Right Button (Top and Bottom Rows) */}
             {i !== 1 && (
               <button
                 onClick={() => handleScrollClick(i, 1)}
@@ -176,8 +209,12 @@ export default function Photos({ images }: { images: { url: string }[] }) {
             )}
 
             <div
-              ref={(el) => { rowRefs.current[i] = el; }}
+              data-index={i}
+              ref={(el) => {
+                rowRefs.current[i] = el;
+              }}
               className="flex gap-4 overflow-x-auto no-scrollbar px-2"
+              onClick={() => {}}
             >
               {rowImgs.map((item, idx) => {
                 const indexForModal = globalIndex++;
@@ -222,14 +259,20 @@ export default function Photos({ images }: { images: { url: string }[] }) {
             />
 
             <button
-              onClick={(e) => { e.stopPropagation(); prevImage(); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                prevImage();
+              }}
               className="absolute left-5 top-1/2 -translate-y-1/2 z-230 bg-black/50 hover:bg-white hover:text-black text-white p-3 rounded-full text-2xl transition"
             >
               <FaCaretLeft />
             </button>
 
             <button
-              onClick={(e) => { e.stopPropagation(); nextImage(); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                nextImage();
+              }}
               className="absolute right-5 top-1/2 -translate-y-1/2 z-230 bg-black/50 hover:bg-white hover:text-black text-white p-3 rounded-full text-2xl transition"
             >
               <FaCaretRight />

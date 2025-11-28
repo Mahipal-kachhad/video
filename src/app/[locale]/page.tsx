@@ -10,13 +10,11 @@ import Footer from "@/components/mvty/Footer";
 import GlimpsOfMaa from "@/components/maaVishvambhari/GlimpsOfMaa";
 import MaaVishvambhari from "@/components/maaVishvambhari/MaaVishvambhari";
 import Map from "@/components/mvty/Map";
-import Pillars from "@/components/pillars/Pillars";
 import Quotes from "@/components/quotes/Quotes";
 import SreeVitthalbhai from "@/components/sreeVitthalbhai/SreeVitthalbhai";
 import VitthalbhaiBio from "@/components/sreeVitthalbhai/VitthalbhaiBio";
 import VideoGalaxy from "@/components/videoAnimation/VideoGalaxy";
 import { Toaster } from "react-hot-toast";
-import GallerySlider from "@/components/mvty/GallerySlider";
 import MainEntry from "@/components/pillars/3dPillars/MainEntry";
 import ScrollToTop from "@/components/mvty/ScrollToTop";
 import Gallery from "@/components/gallary/Gallery";
@@ -32,9 +30,9 @@ export default async function HomePage({
   setRequestLocale(locale);
   return (
     <>
-      {/* <VideoGalaxy /> */}
+      <VideoGalaxy />
       <div className="bg-[#1D1D1F] min-h-screen">
-        {/* <AboutMVTY />
+        <AboutMVTY />
         <MaaVishvambhari />
         <GlimpsOfMaa />
         <SreeVitthalbhai />
@@ -42,9 +40,9 @@ export default async function HomePage({
         <VideoModel />
         <DhamInfo />
         <Dham2 />
-        <MainEntry /> */}
+        <MainEntry />
         <Gallery />
-        {/* <Events />
+        <Events />
         <Quotes />
         <Darshan />
         <Map />
@@ -52,7 +50,7 @@ export default async function HomePage({
         <Footer />
         <ScrollToTop />
         <Toaster position="top-center" reverseOrder={false} />
-        <Chat /> */}
+        <Chat />
       </div>
     </>
   );

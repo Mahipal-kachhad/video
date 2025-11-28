@@ -11,6 +11,16 @@ import {
 } from "three";
 import SphereModel from "./SphereModel";
 import Hotspot from "./Hotspot";
+import Polygon from "./Polygon";
+
+// 1. NEW INTERFACE FOR POLYGONS
+export interface PolygonData {
+  points: [number, number, number][];
+  borderColor?: string;
+  fillColor?: string;
+  fillOpacity?: number;
+  target?: string; // <--- Add this
+}
 
 export interface HotspotData {
   x: number;
@@ -21,13 +31,17 @@ export interface HotspotData {
   content: string;
   img: string | null;
 }
+
 export interface SceneNode {
   id: string;
   texture: string;
   content: string;
   title: string;
   hotspots: HotspotData[];
+  // 2. ADD POLYGONS ARRAY TO SCENE NODE
+  polygons?: PolygonData[];
 }
+
 export interface SceneDataMap {
   [key: string]: SceneNode;
 }
@@ -42,12 +56,9 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
   const sceneKeys = Object.keys(data);
   const [currentSceneId, setCurrentSceneId] = useState(sceneKeys[0]);
   const [history, setHistory] = useState<string[]>([]);
-
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
-
   const isMenuOpen = isSidebarOpen || isInfoOpen;
-
   const [isAutoRotating, setIsAutoRotating] = useState(false);
 
   const targetFov = useRef(60);
@@ -215,20 +226,31 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
         />
       )}
 
-      {/* --- HOTSPOTS --- */}
+      {/* --- RENDER HOTSPOTS --- */}
       {!isTransitioning &&
-        currentScene.hotspots.map((spot, index) => (
-          <Hotspot
-            key={index}
-            x={spot.x}
-            y={spot.y}
-            z={spot.z}
-            label={spot.label}
-            img={spot.img}
-            onClick={() => handleHotspotClick(spot.target)}
-            onZoom={handleZoom}
-            // PASS THE MENU STATE DOWN
-            isMenuOpen={isMenuOpen}
+        currentScene.polygons?.map((poly, index) => (
+          <Polygon
+            key={`poly-${index}`}
+            points={poly.points}
+            borderColor={poly.borderColor}
+            fillColor={poly.fillColor}
+            fillOpacity={poly.fillOpacity}
+            target={poly.target} // Pass the target
+            onClick={() => {
+              if (poly.target) handleHotspotClick(poly.target);
+            }}
+          />
+        ))}
+
+      {/* --- RENDER POLYGONS (NEW) --- */}
+      {!isTransitioning &&
+        currentScene.polygons?.map((poly, index) => (
+          <Polygon
+            key={`poly-${index}`}
+            points={poly.points}
+            borderColor={poly.borderColor}
+            fillColor={poly.fillColor}
+            fillOpacity={poly.fillOpacity}
           />
         ))}
 
@@ -238,6 +260,7 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
         style={{ pointerEvents: "none", zIndex: 100000 }}
         zIndexRange={[100000, 100000]}
       >
+        {/* ... (Keep existing UI code exact same) ... */}
         {/* Left Sidebar Toggle */}
         <div
           className={`absolute top-5 left-5 pointer-events-auto z-50 transition-transform duration-300 ease-in-out ${
@@ -265,7 +288,7 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
 
         {/* Left Sidebar Content */}
         <div
-          className={`absolute top-0 left-0 h-full w-45 transition-transform duration-300 ease-in-out pointer-events-auto flex flex-col z-40 ${
+          className={`absolute top-0 left-0 h-fit w-45 transition-transform duration-300 ease-in-out pointer-events-auto flex flex-col z-40 ${
             isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
           onPointerDown={handleUIInteraction}
