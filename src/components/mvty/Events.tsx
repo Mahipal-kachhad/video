@@ -246,7 +246,7 @@ const Events = () => {
                                 target="_blank"
                               >
                                 <img
-                                  src="/icons/instagram2.svg"
+                                  src="/icons/instagram.svg"
                                   alt="social media"
                                 />
                               </a>
