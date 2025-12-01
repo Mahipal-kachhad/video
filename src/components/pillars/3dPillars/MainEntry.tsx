@@ -55,7 +55,7 @@ const MainEntry = () => {
             <div className="justify-end flex p-5">
               <button
                 onClick={toggleFullscreen}
-                className="w-10 h-10 bg-[#464646]/80 rounded-full transition-all active:scale-95 flex items-center justify-center pointer-events-auto"
+                className="w-10 h-10 bg-black/80 rounded-full transition-all active:scale-95 flex items-center justify-center pointer-events-auto"
                 title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
               >
                 {isFullscreen ? (

@@ -17,14 +17,13 @@ interface Pillar {
   img: string;
 }
 
-// Ensure these interfaces match SceneContent.tsx
 export interface Scene {
   id: string;
   texture: string;
   content: string;
   title: string;
   hotspots: HotspotData[];
-  polygons?: PolygonData[]; // Added optional polygons
+  polygons?: PolygonData[];
 }
 
 export interface SceneData {
@@ -142,15 +141,6 @@ const Scene = () => {
             img: pillarsContent[2].img,
           },
           {
-            x: -49,
-            y: -2,
-            z: 0,
-            target: "yagnaShala",
-            label: pillarsContent[3].title,
-            content: pillarsContent[3].content,
-            img: pillarsContent[3].img,
-          },
-          {
             x: 24,
             y: -2,
             z: 24,
@@ -249,7 +239,6 @@ const Scene = () => {
         texture: "/images/img3.jpg",
         polygons: [],
         hotspots: [
-          // ... (keep existing)
           {
             x: 0,
             y: -2,
@@ -314,7 +303,6 @@ const Scene = () => {
         texture: "/images/img4.jpg",
         polygons: [],
         hotspots: [
-          // ... (keep existing)
           {
             x: 0,
             y: -2,
@@ -379,7 +367,6 @@ const Scene = () => {
         texture: "/images/img5.jpg",
         polygons: [],
         hotspots: [
-          // ... (keep existing)
           {
             x: 0,
             y: -2,
@@ -443,7 +430,6 @@ const Scene = () => {
         texture: "/images/img6.jpg",
         polygons: [],
         hotspots: [
-          // ... (keep existing)
           {
             x: 0,
             y: -2,
@@ -507,7 +493,6 @@ const Scene = () => {
         texture: "/images/img7.jpg",
         polygons: [],
         hotspots: [
-          // ... (keep existing)
           {
             x: 0,
             y: -2,

@@ -29,18 +29,12 @@ const ScrollToTop = () => {
         <button
           onClick={scrollToTop}
           className="
-            fixed bottom-20 right-5 
-            bg-gray-700/90 text-white 
-            w-12 h-12 
-            flex items-center justify-center 
-            rounded-full shadow-lg 
-            hover:bg-gray-700/90
-            transition-all 
-            active:scale-95 backdrop-blur z-100
+            fixed bottom-17 right-6
+            active:scale-95 z-10000
           "
           aria-label="Scroll to top"
         >
-          <FaArrowUpLong size={24} />
+          <img src="/icons/top.svg" width={28} />
         </button>
       )}
     </>

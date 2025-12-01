@@ -47,7 +47,7 @@ export interface SceneDataMap {
 }
 
 const iconStyle =
-  "w-10 h-10 bg-[#464646]/80 rounded-full transition-all active:scale-95 flex items-center justify-center";
+  "w-10 h-10 bg-black/80 rounded-full transition-all active:scale-95 flex items-center justify-center";
 const iconWidth = 18;
 
 const SceneContent = ({ data }: { data: SceneDataMap }) => {
@@ -72,7 +72,6 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
 
   const currentScene = data[currentSceneId];
 
-  // --- HANDLERS ---
   const handleBgClick = (e: any) => {
     if (isMenuOpen) {
       setIsSidebarOpen(false);
@@ -228,17 +227,16 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
 
       {/* --- RENDER HOTSPOTS --- */}
       {!isTransitioning &&
-        currentScene.polygons?.map((poly, index) => (
-          <Polygon
-            key={`poly-${index}`}
-            points={poly.points}
-            borderColor={poly.borderColor}
-            fillColor={poly.fillColor}
-            fillOpacity={poly.fillOpacity}
-            target={poly.target} // Pass the target
-            onClick={() => {
-              if (poly.target) handleHotspotClick(poly.target);
-            }}
+        currentScene.hotspots?.map((hotspot, index) => (
+          <Hotspot
+            key={`hotspot-${index}`}
+            x={hotspot.x}
+            y={hotspot.y}
+            z={hotspot.z}
+            label={hotspot.label}
+            img={hotspot.img}
+            isMenuOpen={isMenuOpen} // Important: Hotspot.tsx uses this to hide itself when menu is open
+            onClick={() => handleHotspotClick(hotspot.target)}
           />
         ))}
 
@@ -303,7 +301,7 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
                   setIsSidebarOpen(false);
                 }}
                 className={`w-full text-left px-4 py-3 rounded-xl transition-all flex items-center gap-3 text-white font-bold ${
-                  currentSceneId === key ? "bg-[#464646]" : "bg-[#464646]/70"
+                  currentSceneId === key ? "bg-black" : "bg-black/80"
                 }`}
               >
                 <span>{key.charAt(0).toUpperCase() + key.slice(1)}</span>
@@ -387,7 +385,7 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
             className={iconStyle}
             title="Go Back"
           >
-            <img src="/icons/pa-back.svg" alt="back" width={iconWidth} />
+            <img src="/icons/pa-back.svg" alt="back" width={iconWidth - 2} />
           </button>
           <button onClick={handleZoomIn} className={iconStyle} title="Zoom In">
             <img src="/icons/pa-zoomin.svg" alt="zoom in" width={iconWidth} />
@@ -398,9 +396,14 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
             title="Auto Rotate"
           >
             {isAutoRotating ? (
-              <img src="/icons/pa-pose.svg" alt="pose" width={iconWidth} />
+              <img src="/icons/pa-pose.svg" alt="pose" width={iconWidth - 3} />
             ) : (
-              <img src="/icons/pa-play.svg" alt="play" width={iconWidth} />
+              <img
+                src="/icons/pa-play.svg"
+                alt="play"
+                width={iconWidth}
+                className="ps-1"
+              />
             )}
           </button>
           <button

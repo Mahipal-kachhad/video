@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { FaCaretRight } from "react-icons/fa6";
+import { FaCaretRight, FaCaretLeft } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 import { Dialog } from "@headlessui/react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -32,7 +32,7 @@ const PLAYLIST_IDS = [
   "PLzgKDwsTl8KgNK5zdq9CfC_k3mat3AEzT",
 ];
 
-const API_KEY = "AIzaSyB90DzEHkzIdvZG5Maans_ZCiENi6wdXj4";
+const API_KEY = "AIzaSyB90DzEHkzIdvZG5Maans_ZCiENi6wdXj4"; // Note: Ensure this key is valid/safe to use
 const BASE_URL = "https://www.googleapis.com/youtube/v3";
 
 export default function Video({ activeMenu }: { activeMenu: number }) {
@@ -45,10 +45,9 @@ export default function Video({ activeMenu }: { activeMenu: number }) {
   const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
   const controllers = useRef<{ [key: number]: (amount: number) => void }>({});
   
-  // --- NEW: Global Interaction State & Speeds ---
-  const hasUserInteracted = useRef(false); // Stops ALL rows if true
-  const rowSpeeds = useRef<number[]>([]);  // Stores unique speed for each row
-  const rowInView = useRef<{ [key: number]: boolean }>({}); // Track visibility per row
+  const hasUserInteracted = useRef(false); 
+  const rowSpeeds = useRef<number[]>([]);  
+  const rowInView = useRef<{ [key: number]: boolean }>({}); 
 
   useEffect(() => {
     const fetchAllPlaylists = async () => {
@@ -93,7 +92,6 @@ export default function Video({ activeMenu }: { activeMenu: number }) {
   useEffect(() => {
     const cleanups: (() => void)[] = [];
 
-    // 1. Intersection Observer (Efficiency: only scroll what is seen)
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -104,7 +102,6 @@ export default function Video({ activeMenu }: { activeMenu: number }) {
       { threshold: 0.1 }
     );
 
-    // 2. Global Stop Function
     const stopAllAutoScroll = () => {
       hasUserInteracted.current = true;
     };
@@ -113,14 +110,20 @@ export default function Video({ activeMenu }: { activeMenu: number }) {
       if (!el) return;
 
       observer.observe(el);
-      rowInView.current[index] = false; // Default to invisible
+      rowInView.current[index] = false;
 
-      // --- Assign Unique Speed (Random between 0.3 and 0.7) ---
+      // Initialize scroll position based on row index (Middle row starts at end)
+      if (index === 1) {
+        // Allow a small delay for layout to settle if needed, or set immediately
+        el.scrollLeft = el.scrollWidth; 
+      } else {
+        el.scrollLeft = 0;
+      }
+
       if (!rowSpeeds.current[index]) {
         rowSpeeds.current[index] = 0.3 + Math.random() * 0.4;
       }
 
-      // Physics State
       let targetScroll = el.scrollLeft;
       let isAnimating = false; 
       let physicsRafId: number | null = null;
@@ -129,14 +132,14 @@ export default function Video({ activeMenu }: { activeMenu: number }) {
       const clamp = (v: number) =>
         Math.max(0, Math.min(v, el.scrollWidth - el.clientWidth));
 
-      // --- 3. Auto Scroll Loop ---
       const runAutoScroll = () => {
-        // Condition: Row visible? Global interaction happened? Physics animating?
         if (rowInView.current[index] && !hasUserInteracted.current && !isAnimating) {
-           // Use the unique random speed for this row
-           el.scrollLeft += rowSpeeds.current[index];
-           
-           // Sync target so manual interaction doesn't snap back
+           // Reverse direction for middle row (index 1)
+           if (index === 1) {
+             el.scrollLeft -= rowSpeeds.current[index];
+           } else {
+             el.scrollLeft += rowSpeeds.current[index];
+           }
            targetScroll = el.scrollLeft;
         }
         autoScrollRafId = requestAnimationFrame(runAutoScroll);
@@ -144,7 +147,6 @@ export default function Video({ activeMenu }: { activeMenu: number }) {
       
       runAutoScroll();
 
-      // --- 4. Physics / Interaction Logic ---
       const smoothStep = () => {
         const diff = targetScroll - el.scrollLeft;
         if (Math.abs(diff) < 1) {
@@ -168,23 +170,25 @@ export default function Video({ activeMenu }: { activeMenu: number }) {
         }
       };
 
-      // Handlers
       const wheelHandler = (e: WheelEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        stopAllAutoScroll(); // <--- STOP ALL
-        moveScroll(e.deltaY * 2.5);
+        stopAllAutoScroll();
+        
+        // Reverse wheel direction for middle row to feel natural
+        const direction = index === 1 ? -1 : 1; 
+        moveScroll(e.deltaY * 2.5 * direction);
       };
 
       const touchHandler = () => {
-        stopAllAutoScroll(); // <--- STOP ALL
+        stopAllAutoScroll();
       };
 
       el.addEventListener("wheel", wheelHandler, { passive: false });
       el.addEventListener("touchstart", touchHandler, { passive: true });
 
       controllers.current[index] = (amount: number) => {
-        stopAllAutoScroll(); // <--- STOP ALL
+        stopAllAutoScroll();
         if (!isAnimating) targetScroll = el.scrollLeft;
         moveScroll(amount);
       };
@@ -205,11 +209,28 @@ export default function Video({ activeMenu }: { activeMenu: number }) {
     };
   }, [data]);
 
-  const handleNextClick = (index: number) => {
+  const handleScrollClick = (index: number, direction: number) => {
     if (controllers.current[index]) {
-      controllers.current[index](600);
+      // 600px scroll amount
+      controllers.current[index](600 * direction);
     }
   };
+
+  // Helper component for the Playlist Card to reuse at start and end
+  const PlaylistCard = ({ title, thumbnail }: { title: string, thumbnail: string }) => (
+    <div className="relative shrink-0 w-[280px] h-40 rounded-2xl overflow-hidden cursor-default border border-white/10">
+      <img
+        src={thumbnail}
+        alt={title}
+        className="w-full h-full object-cover opacity-50"
+      />
+      <div className="absolute inset-0 flex items-center justify-center bg-black/50 p-4 text-center">
+        <span className="text-white font-bold tracking-wider text-lg leading-tight uppercase">
+          {title}
+        </span>
+      </div>
+    </div>
+  );
 
   if (loading) return <div className="p-20 text-white">Loading videos...</div>;
 
@@ -218,12 +239,26 @@ export default function Video({ activeMenu }: { activeMenu: number }) {
       <div className="flex flex-col gap-5 pb-4 w-full">
         {data.map((playlist, i) => (
           <div key={playlist.id} className="relative group">
-            <button
-              onClick={() => handleNextClick(i)}
-              className="absolute right-5 top-1/2 -translate-y-1/2 z-20 bg-black/80 text-white w-10 h-10 flex items-center justify-center rounded-full hover:bg-white hover:text-black transition cursor-pointer active:scale-90"
-            >
-              <FaCaretRight size={22} />
-            </button>
+            
+            {/* Left Button for Middle Row (Index 1) */}
+            {i === 1 && (
+              <button
+                onClick={() => handleScrollClick(i, -1)}
+                className="absolute left-5 top-1/2 -translate-y-1/2 z-20 bg-black/80 text-white w-10 h-10 flex items-center justify-center rounded-full hover:bg-white hover:text-black transition cursor-pointer active:scale-90"
+              >
+                <FaCaretLeft size={22} />
+              </button>
+            )}
+
+            {/* Right Button for Top/Bottom Rows (Index 0, 2) */}
+            {i !== 1 && (
+              <button
+                onClick={() => handleScrollClick(i, 1)}
+                className="absolute right-5 top-1/2 -translate-y-1/2 z-20 bg-black/80 text-white w-10 h-10 flex items-center justify-center rounded-full hover:bg-white hover:text-black transition cursor-pointer active:scale-90"
+              >
+                <FaCaretRight size={22} />
+              </button>
+            )}
 
             <div
               data-index={i}
@@ -232,18 +267,8 @@ export default function Video({ activeMenu }: { activeMenu: number }) {
               }}
               className="flex gap-4 overflow-x-auto no-scrollbar px-2 py-1"
             >
-              <div className="relative shrink-0 w-[280px] h-40 rounded-2xl overflow-hidden cursor-default border border-white/10">
-                <img
-                  src={playlist.thumbnail}
-                  alt={playlist.title}
-                  className="w-full h-full object-cover opacity-50"
-                />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/50 p-4 text-center">
-                  <span className="text-white font-bold tracking-wider text-lg leading-tight uppercase">
-                    {playlist.title}
-                  </span>
-                </div>
-              </div>
+              {/* Playlist Card Start */}
+              <PlaylistCard title={playlist.title} thumbnail={playlist.thumbnail} />
 
               {playlist.videos.map((video) => {
                 const videoId = video.snippet.resourceId?.videoId;
@@ -256,9 +281,6 @@ export default function Video({ activeMenu }: { activeMenu: number }) {
                     key={video.snippet.resourceId?.videoId}
                     onClick={() => {
                         videoId && setSelectedVideo(videoId);
-                        // Optional: Clicking a video also counts as interaction?
-                        // If yes, uncomment next line:
-                        // hasUserInteracted.current = true; 
                     }}
                     className="relative shrink-0 w-[280px] h-40 rounded-2xl overflow-hidden cursor-pointer hover:scale-[1.02] transition-transform duration-300 border border-white/5 bg-[#121212]"
                   >
@@ -276,6 +298,9 @@ export default function Video({ activeMenu }: { activeMenu: number }) {
                   </div>
                 );
               })}
+
+              {/* Playlist Card End - Added as requested */}
+              <PlaylistCard title={playlist.title} thumbnail={playlist.thumbnail} />
             </div>
           </div>
         ))}
@@ -309,7 +334,7 @@ export default function Video({ activeMenu }: { activeMenu: number }) {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              className="relative z-220 w-full max-w-5xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl mx-4 border border-white/10"
+              className="relative z-220 w-full xl:max-w-[70vw] aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl mx-4 border border-white/10"
             >
               <iframe
                 width="100%"

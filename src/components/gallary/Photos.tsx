@@ -9,6 +9,7 @@ export default function Photos({ images }: { images: { url: string }[] }) {
   const rowRefs = useRef<(HTMLDivElement | null)[]>([null, null, null]);
   const controllers = useRef<{ [key: number]: (amount: number) => void }>({});
 
+  // Reverted to Global interaction state as requested
   const hasUserInteracted = useRef(false);
   const rowSpeeds = useRef<number[]>([]);
   const rowInView = useRef<{ [key: number]: boolean }>({});
@@ -43,6 +44,9 @@ export default function Photos({ images }: { images: { url: string }[] }) {
   }, [isViewerOpen]);
 
   useEffect(() => {
+    // Reset interaction state on mount/tab switch
+    hasUserInteracted.current = false;
+
     const cleanups: (() => void)[] = [];
 
     const observer = new IntersectionObserver(
@@ -65,6 +69,23 @@ export default function Photos({ images }: { images: { url: string }[] }) {
       observer.observe(el);
       rowInView.current[index] = false;
 
+      // --- FIX: ResizeObserver ---
+      // This detects when images load and the container gets wider.
+      // If it's the middle row (index 1) and user hasn't touched it, 
+      // we force it to the end (right side) so it doesn't get stuck at 0.
+      const resizeObserver = new ResizeObserver(() => {
+        if (index === 1 && !hasUserInteracted.current) {
+             // Only snap to end if we are currently near the start (glitch state)
+             // or if the difference is significant. 
+             // Ideally, we just keep it pinned to end while loading.
+             if(el.scrollLeft < el.scrollWidth - el.clientWidth - 100) {
+                 el.scrollLeft = el.scrollWidth;
+             }
+        }
+      });
+      resizeObserver.observe(el);
+
+      // Initial positioning
       if (index === 1) {
         el.scrollLeft = el.scrollWidth;
       } else {
@@ -155,6 +176,7 @@ export default function Photos({ images }: { images: { url: string }[] }) {
         el.removeEventListener("touchstart", touchHandler);
         if (physicsRafId) cancelAnimationFrame(physicsRafId);
         if (autoScrollRafId) cancelAnimationFrame(autoScrollRafId);
+        resizeObserver.disconnect(); // Clean up observer
         delete controllers.current[index];
         observer.unobserve(el);
       });

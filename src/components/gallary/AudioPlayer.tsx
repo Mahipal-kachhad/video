@@ -2,6 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { Audio } from "./Audio";
 import WaveSurfer, { WaveSurferOptions } from "wavesurfer.js";
 
+const formatTime = (seconds: number) => {
+  if (!seconds) return "0:00";
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${s.toString().padStart(2, "0")}`;
+};
+
 const AudioPlayer = ({ val, idx }: { val: Audio; idx: number }) => {
   const { path, image, title } = val;
   const waveFormRef = useRef<HTMLDivElement>(null!);
@@ -9,6 +16,8 @@ const AudioPlayer = ({ val, idx }: { val: Audio; idx: number }) => {
   const [loading, setLoading] = useState(true);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [totalDuration, setTotalDuration] = useState(0);
 
   useEffect(() => {
     if (!waveFormRef.current) return;
@@ -27,12 +36,19 @@ const AudioPlayer = ({ val, idx }: { val: Audio; idx: number }) => {
     const ws = WaveSurfer.create(options);
     waveSurfer.current = ws;
 
-    ws.on("ready", () => {
+    ws.on("ready", (duration) => {
       setLoading(false);
+      setTotalDuration(duration);
     });
     ws.on("play", () => setIsPlaying(true));
     ws.on("pause", () => setIsPlaying(false));
     ws.on("finish", () => setIsPlaying(false));
+    ws.on("audioprocess", (time) => {
+      setCurrentTime(time);
+    });
+    ws.on("interaction", (newTime) => {
+      setCurrentTime(newTime);
+    });
 
     ws.load(path).catch((err) => {
       if (
@@ -89,7 +105,7 @@ const AudioPlayer = ({ val, idx }: { val: Audio; idx: number }) => {
   };
 
   return (
-    <div className="flex items-center gap-5 p-3 rounded-xl mb-4 bg-linear-0 from-transparent to-white/20">
+    <div className="flex items-center gap-5 p-3 rounded-xl mb-4 bg-linear-0 from-transparent to-white/20 mx-3 sm:mx-5">
       <img
         src={image || "/fallback.jpg"}
         alt="thumbnail"
@@ -97,41 +113,52 @@ const AudioPlayer = ({ val, idx }: { val: Audio; idx: number }) => {
       />
 
       <div className="flex-1">
-        <div className="flex gap-3 pb-1">
-          <button
-            onClick={() => waveSurfer.current?.playPause()}
-            className="w-8 h-8 bg-[#464646]/80 rounded-full active:scale-95 flex items-center justify-center"
-          >
-            <img
-              src={isPlaying ? "/icons/pa-pose.svg" : "/icons/au-play.svg"}
-              alt={isPlaying ? "pause" : "play"}
-              width={12}
-            />
-          </button>
+        <div className="flex justify-between mb-3 sm:mb-5 sm:mt-3">
+          <div className="flex gap-3 items-center">
+            <button
+              onClick={() => waveSurfer.current?.playPause()}
+              className="w-8 h-8 bg-[#464646]/80 rounded-full active:scale-95 flex items-center justify-center"
+            >
+              <img
+                src={isPlaying ? "/icons/pa-pose.svg" : "/icons/au-play.svg"}
+                alt={isPlaying ? "pause" : "play"}
+                width={12}
+              />
+            </button>
 
-          <button
-            onClick={handleShare}
-            className="w-8 h-8 bg-[#464646]/80 rounded-full active:scale-95 flex items-center justify-center"
-          >
-            <img src="/icons/au-share.svg" alt="share" width={12} />
-          </button>
+            <button
+              onClick={handleShare}
+              className="w-8 h-8 bg-[#464646]/80 rounded-full active:scale-95 flex items-center justify-center"
+            >
+              <img src="/icons/au-share.svg" alt="share" width={12} />
+            </button>
 
-          <button
-            onClick={handleDownload}
-            disabled={isDownloading}
-            className={`w-8 h-8 bg-[#464646]/80 rounded-full active:scale-95 flex items-center justify-center ${
-              isDownloading ? "opacity-70 cursor-not-allowed" : ""
-            }`}
-          >
-            {isDownloading ? (
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            ) : (
-              <img src="/icons/au-download.svg" alt="download" width={12} />
-            )}
-          </button>
+            <button
+              onClick={handleDownload}
+              disabled={isDownloading}
+              className={`w-8 h-8 bg-[#464646]/80 rounded-full active:scale-95 flex items-center justify-center ${
+                isDownloading ? "opacity-70 cursor-not-allowed" : ""
+              }`}
+            >
+              {isDownloading ? (
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <img src="/icons/au-download.svg" alt="download" width={12} />
+              )}
+            </button>
+            <p className="hidden sm:block ps-5">
+              {idx < 10 ? `0${idx + 1}` : idx + 1} - {title}
+            </p>
+          </div>
+          {!loading && (
+            <p>
+              <span className="text-[#FF8D28]">{formatTime(currentTime)}</span>{" "}
+              / {formatTime(totalDuration)}
+            </p>
+          )}
         </div>
 
-        <p className="pb-1">
+        <p className="sm:hidden pb-3">
           {idx < 10 ? `0${idx + 1}` : idx + 1} - {title}
         </p>
 

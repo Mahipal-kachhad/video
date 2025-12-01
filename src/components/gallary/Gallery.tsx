@@ -59,29 +59,40 @@ const Gallery = () => {
   }, []);
 
   return (
-    <div className="">
+    <div>
       <div className="flex items-center justify-around pt-10">
         {MENU_ITEMS[menuLang].map((val, idx) => (
           <button
             onClick={() => setActiveMenu(val)}
             key={idx}
-            className={`uppercase font-bold transition text-xl sm:text-3xl px-5 py-3 sm:px-10 sm:py-4 rounded-t-2xl ${
-              activeMenu === val ? "bg-black" : "text-[#8C8C8C]"
+            className={`uppercase font-bold transition text-xl sm:text-3xl flex-1 rounded-t-2xl ${
+              activeMenu === val ? "bg-black text-[#FF8D28]" : "text-[#8C8C8C]"
             }`}
           >
-            {val}
+            <span
+              className={`
+                        relative py-3 sm:py-4 px-3 block w-fit mx-auto
+                           ${
+                             activeMenu === val
+                               ? "after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[3px] after:bg-white after:rounded-full"
+                               : ""
+                           }
+                       `}
+            >
+              {val}
+            </span>
           </button>
         ))}
       </div>
       <div className="bg-black overflow-x-auto">
-        <div className="flex gap-10 sm:gap-20 h-18 sm:h-20 mx-10 w-fit items-center">
+        <div className="flex gap-10 sm:gap-20 h-18 sm:h-20 px-5 sm:px-10 mx-auto w-fit items-center">
           {activeMenu === MENU_ITEMS[menuLang][0] &&
             pillarsContent.map((val, idx) => (
               <button
                 onClick={() => setActivePillar(idx)}
                 key={idx}
                 className={`text-xl sm:text-2xl whitespace-nowrap transition ${
-                  idx === activePillar ? "text-white" : "text-[#464646]"
+                  idx === activePillar ? "text-[#FF8D28]" : "text-[#464646]"
                 }`}
               >
                 {val.title}
@@ -93,7 +104,7 @@ const Gallery = () => {
                 onClick={() => setActiveVideoMenu(idx)}
                 key={idx}
                 className={`text-xl sm:text-2xl whitespace-nowrap transition ${
-                  idx === activeVideoMenu ? "text-white" : "text-[#464646]"
+                  idx === activeVideoMenu ? "text-[#FF8D28]" : "text-[#464646]"
                 }`}
               >
                 {val}
@@ -105,7 +116,7 @@ const Gallery = () => {
                 onClick={() => setActiveAudioMenu(idx)}
                 key={idx}
                 className={`text-xl sm:text-2xl whitespace-nowrap transition ${
-                  idx === activeAudioMenu ? "text-white" : "text-[#464646]"
+                  idx === activeAudioMenu ? "text-[#FF8D28]" : "text-[#464646]"
                 }`}
               >
                 {val}

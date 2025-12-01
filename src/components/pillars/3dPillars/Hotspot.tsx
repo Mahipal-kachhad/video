@@ -75,7 +75,7 @@ const Hotspot = ({ x, y, z, img, label, onClick, onZoom, isMenuOpen }: any) => {
             {/* --- LAYER 2: LABEL & IMAGE (Middle) --- */}
             <div className="absolute top-5 flex flex-col items-center origin-top z-10">
               <div
-                className={`bg-gray-600 text-white font-bold px-5 py-1.5 rounded-t-2xl duration-300 ${
+                className={`bg-[#2c2c2c] text-white font-bold px-5 py-1.5 rounded-t-2xl duration-300 ${
                   hovered ? "" : "rounded-b-2xl"
                 } shadow-sm relative translate-y-2 pointer-events-auto cursor-pointer`}
                 onMouseEnter={() => setHover(true)}
@@ -89,7 +89,7 @@ const Hotspot = ({ x, y, z, img, label, onClick, onZoom, isMenuOpen }: any) => {
 
               <div
                 className={`
-                  bg-gray-600 p-2 rounded-2xl shadow-2xl relative transition-opacity duration-300 ease-in-out
+                  bg-[#2c2c2c] p-2 rounded-2xl shadow-2xl relative transition-opacity duration-300 ease-in-out
                   ${
                     hovered
                       ? "opacity-100 pointer-events-auto cursor-pointer"

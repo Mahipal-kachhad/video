@@ -30,7 +30,7 @@ export default async function HomePage({
   setRequestLocale(locale);
   return (
     <>
-      <VideoGalaxy />
+      {/* <VideoGalaxy /> */}
       <div className="bg-[#1D1D1F] min-h-screen">
         <AboutMVTY />
         <MaaVishvambhari />
