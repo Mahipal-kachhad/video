@@ -36,7 +36,7 @@ const Audio = ({ activeMenu }: { activeMenu: number }) => {
   }, [slug]);
   return (
     <div>
-      <div className="max-h-[700px] overflow-y-auto">
+      <div className="max-h-[700px] max-w-6xl mx-auto overflow-y-auto">
         {audio.map((val, idx) => (
           <AudioPlayer val={val} key={idx} idx={idx} />
         ))}

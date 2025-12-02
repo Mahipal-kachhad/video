@@ -295,8 +295,10 @@ const Chat = () => {
         {<img src="/icons/chat.svg" width={35} />}
       </button>
 
+      <div className="fixed bottom-0 translate-1/2 right-0 w-120 h-120 bg-linear-to-l rotate-45 from-black from-50% to-transparent pointer-events-none z-5" />
+
       {open && (
-        <div className="fixed bottom-5 right-17 sm:right-20 w-80 md:w-[400px] h-[600px] bg-black rounded-3xl shadow-2xl border-2 border-[#ff8127] overflow-hidden z-9000 flex flex-col animate-fade-in-up font-sans">
+        <div className="fixed bottom-5 right-17 sm:right-20 w-80 md:w-[400px] h-[600px] bg-black rounded-3xl shadow-2xl border-2 border-[#ff8127] overflow-hidden z-900000 flex flex-col animate-fade-in-up font-sans">
           <div className="bg-[#ff8127] text-black py-2 font-bold text-sm sm:text-lg flex justify-center items-center relative shadow-md">
             <span className="tracking-wide">{ta("chatTitle")}</span>
           </div>

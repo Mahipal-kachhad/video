@@ -30,7 +30,7 @@ const ScrollToTop = () => {
           onClick={scrollToTop}
           className="
             fixed bottom-17 right-6
-            active:scale-95 z-10000
+            active:scale-95 z-20
           "
           aria-label="Scroll to top"
         >

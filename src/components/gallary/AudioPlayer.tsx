@@ -105,7 +105,7 @@ const AudioPlayer = ({ val, idx }: { val: Audio; idx: number }) => {
   };
 
   return (
-    <div className="flex items-center gap-5 p-3 rounded-xl mb-4 bg-linear-0 from-transparent to-white/20 mx-3 sm:mx-5">
+    <div className="flex items-center gap-5 p-3 rounded-xl mb-4 bg-linear-0 from-transparent to-white/20 mx-3 sm:mx-5 xl:mx-0">
       <img
         src={image || "/fallback.jpg"}
         alt="thumbnail"

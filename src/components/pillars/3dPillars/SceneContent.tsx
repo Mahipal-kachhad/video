@@ -249,9 +249,9 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
             borderColor={poly.borderColor}
             fillColor={poly.fillColor}
             fillOpacity={poly.fillOpacity}
+            onClick={() => poly.target && handleHotspotClick(poly.target)}
           />
         ))}
-
       {/* --- UI LAYERS --- */}
       <Html
         fullscreen

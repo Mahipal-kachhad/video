@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 import { BsTelephoneFill } from "react-icons/bs";
 import { HiMail } from "react-icons/hi";
 import { MdLocationPin } from "react-icons/md";
+import BlurPopup from "./BlurPopup";
+import Privacy from "../policy/Privacy";
+import Terms from "../policy/Terms";
 
 const Footer = () => {
   const t = useTranslations("footer");
@@ -17,6 +20,8 @@ const Footer = () => {
     office_hours: "",
     email: "",
   });
+  const [isPolicyOpen, setPolicyOpen] = useState(false);
+  const [isTermsOpen, setTermsOpen] = useState(false);
 
   useEffect(() => {
     axios
@@ -152,17 +157,26 @@ const Footer = () => {
           © 2025 {t("copy1")} <br className="sm:hidden" /> {t("copy2")}
         </p>
         <div className="flex gap-7 text-[#898989]">
-          <a href="#" className="hover:text-[#ff8127] transition ease-in-out">
+          <a
+            className="hover:text-[#ff8127] transition ease-in-out cursor-pointer"
+            onClick={() => setPolicyOpen(!isPolicyOpen)}
+          >
             {t("policy")}
           </a>
-          <a href="#" className="hover:text-[#ff8127] transition ease-in-out">
+          <a
+            className="hover:text-[#ff8127] transition ease-in-out cursor-pointer"
+            onClick={() => setTermsOpen(!isTermsOpen)}
+          >
             {t("terms")}
-          </a>
-          <a href="#" className="hover:text-[#ff8127] transition ease-in-out">
-            {t("disc")}
           </a>
         </div>
       </div>
+      <BlurPopup isOpen={isPolicyOpen} setIsOpen={setPolicyOpen}>
+        <Privacy />
+      </BlurPopup>
+      <BlurPopup isOpen={isTermsOpen} setIsOpen={setTermsOpen}>
+        <Terms />
+      </BlurPopup>
     </footer>
   );
 };

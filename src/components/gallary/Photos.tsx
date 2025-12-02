@@ -260,7 +260,7 @@ export default function Photos({ images }: { images: { url: string }[] }) {
             as="div"
             open={isViewerOpen}
             onClose={closeViewer}
-            className="fixed inset-0 z-200 flex items-center justify-center"
+            className="fixed inset-0 z-2200 flex items-center justify-center"
           >
             <motion.div
               className="absolute inset-0 bg-black/90 backdrop-blur-sm"

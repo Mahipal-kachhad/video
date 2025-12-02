@@ -312,7 +312,7 @@ export default function Video({ activeMenu }: { activeMenu: number }) {
             as="div"
             open={!!selectedVideo}
             onClose={() => setSelectedVideo(null)}
-            className="fixed inset-0 z-200 flex items-center justify-center"
+            className="fixed inset-0 z-2200 flex items-center justify-center"
           >
             <motion.div
               className="absolute inset-0 bg-black/95 backdrop-blur-md"
@@ -334,7 +334,7 @@ export default function Video({ activeMenu }: { activeMenu: number }) {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              className="relative z-220 w-full xl:max-w-[70vw] aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl mx-4 border border-white/10"
+              className="relative w-full xl:max-w-[70vw] aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl mx-4 border border-white/10"
             >
               <iframe
                 width="100%"
