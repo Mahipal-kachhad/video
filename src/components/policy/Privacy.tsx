@@ -315,10 +315,6 @@ const Privacy = () => {
               स्वतंत्र रूप से उपयोग कर सकते हैं - प्रिंट या डिजिटल, वाणिज्यिक या
               अन्यथा। हालाँकि, आप फोंट को अपने दम पर नहीं बेच सकते।
             </p>
-            <p className={textClass}>
-              <strong>अपाचे सॉफ्टवेयर लाइसेंस :</strong> LICENSE-2.0
-            </p>
-
             <h3 className={sectionHeaderClass}>हमसे संपर्क करें</h3>
             <p className={textClass}>
               यदि हम अपनी गोपनीयता नीतियों और प्रक्रियाओं को बदलते हैं, तो हम उन
@@ -619,9 +615,6 @@ const Privacy = () => {
               હેઠળ પરવાનો ધરાવે છે. તમે તમારા ઉત્પાદનો અને પ્રોજેક્ટ્સમાં
               મુક્તપણે તેનો ઉપયોગ કરી શકો છો - પ્રિન્ટ અથવા ડિજિટલ, વ્યાપારી
               અથવા અન્યથા. જો કે, તમે તમારા પોતાના પર ફોન્ટ્સ વેચી શકતા નથી.
-            </p>
-            <p className={textClass}>
-              <strong>અપાચે સોફ્ટવેર લાયસન્સ :</strong> LICENSE-2.0
             </p>
 
             <h3 className={sectionHeaderClass}>અમારો સંપર્ક કરો</h3>
@@ -932,9 +925,6 @@ const Privacy = () => {
             the Open Font License. You can use them freely in your products &
             projects - print or digital, commercial or otherwise. However, you
             can't sell the fonts on their own.
-          </p>
-          <p className={textClass}>
-            <strong>The Apache Software License :</strong> LICENSE-2.0
           </p>
 
           {/* Contact Us */}
