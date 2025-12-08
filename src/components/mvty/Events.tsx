@@ -165,301 +165,308 @@ const Events = () => {
   }, [isViewerOpen, popupImages]);
 
   return (
-    <div className="h-fit w-full flex items-center justify-center sm:py-15 ">
-      <div className="flex mx-auto px-8 w-full xl:w-[85vw] max-w-6xl p-6 sm:p-15 xl:p-10 sm:rounded-4xl bg-black justify-between gap-10 items-center ">
-        <div className="w-full h-full xl:w-md rounded-lg text-white flex flex-col justify-between">
-          {accordionData.map((item, idx) => {
-            const isOpen = openIndex === idx;
-            return (
-              <div
-                key={idx}
-                className="border-b border-neutral-800 last:border-b-0"
-              >
-                <button
-                  onClick={() => handleToggle(idx)}
-                  className="flex justify-between items-center w-full py-2 sm:py-5 xl:py-4 text-left font-semibold"
+    <div className="bg-black">
+      <div className="h-fit w-full flex items-center justify-center sm:py-15 rounded-t-4xl bg-[#1D1D1F]">
+        <div className="flex mx-auto px-8 w-full xl:w-[85vw] max-w-6xl p-6 sm:p-15 xl:p-10 sm:rounded-4xl bg-black justify-between gap-10 items-center ">
+          <div className="w-full h-full xl:w-md rounded-lg text-white flex flex-col justify-between">
+            {accordionData.map((item, idx) => {
+              const isOpen = openIndex === idx;
+              return (
+                <div
+                  key={idx}
+                  className="border-b border-neutral-800 last:border-b-0"
                 >
-                  <span className="text-[1.5rem] sm:text-lg">
-                    <span className="pe-10 hidden sm:inline xl:hidden">-</span>
-                    {item.title}
-                  </span>
-                  <motion.div
-                    animate={{ rotate: isOpen ? 180 : 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="text-[1.5rem] sm:text-[0.9rem] lg:text-lg"
+                  <button
+                    onClick={() => handleToggle(idx)}
+                    className="flex justify-between items-center w-full py-2 sm:py-5 xl:py-4 text-left font-semibold"
                   >
-                    <FiChevronDown />
-                  </motion.div>
-                </button>
-
-                <AnimatePresence initial={false}>
-                  {isOpen && (
+                    <span className="text-[1.5rem] sm:text-lg">
+                      <span className="pe-10 hidden sm:inline xl:hidden">
+                        -
+                      </span>
+                      {item.title}
+                    </span>
                     <motion.div
-                      key={`content-${idx}`}
-                      initial="collapsed"
-                      animate="open"
-                      exit="collapsed"
-                      variants={{
-                        open: { opacity: 1, height: "auto" },
-                        collapsed: { opacity: 0, height: 0 },
-                      }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className="overflow-hidden"
+                      animate={{ rotate: isOpen ? 180 : 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="text-[1.5rem] sm:text-[0.9rem] lg:text-lg"
                     >
-                      {idx === 0 && (
-                        <div className="pb-2 lg:pb-4 text-neutral-300">
-                          <p className="text-[#FF8127] text-justify w-9/10 xl:text-lg sm:text-center mx-auto xl:mx-0 xl:w-full xl:text-left text-[1.1rem]">
-                            {t("events.p1")}
-                          </p>
-                          <p className="text-center xl:text-left py-3 sm:py-2 lg:py-3 text-[1.1rem] sm:text-[0.9rem]">
-                            {t("events.p2")}
-                          </p>
-                          <a
-                            href={data.url}
-                            target="_blank"
-                            className="px-7 w-fit py-2 mx-auto xl:mx-0 block text-[0.8rem] text-[#FF8127] font-bold rounded-full bg-[#ff8127]/10 hover:bg-[#ff8127]/20 active:bg-[#ff8127]/5 transition ease-in cursor-pointer border-t border-t-white/20 border-l border-l-white/20"
-                          >
-                            {t("events.button")}
-                          </a>
-                          <div className="flex xl:block gap-3 items-center py-3 xl:py-0 mx-auto xl:mx-0 w-fit event">
-                            <p className="py-2 sm:text-sm text-neutral-500">
-                              {t("events.live")}
-                            </p>
-                            <div className="flex gap-3 lg:gap-5 text-[#FF8127] items-end">
-                              <a
-                                href="https://www.youtube.com/@MVTYDham/streams"
-                                target="_blank"
-                              >
-                                <img src="/icons/tv.svg" alt="social media" />
-                              </a>
-                              <a
-                                href="https://www.youtube.com/@MVTYDham"
-                                target="_blank"
-                              >
-                                <img
-                                  src="/icons/youtube.svg"
-                                  alt="social media"
-                                />
-                              </a>
-                              <a
-                                href="https://www.instagram.com/mvtydham/"
-                                target="_blank"
-                              >
-                                <img
-                                  src="/icons/instagram.svg"
-                                  alt="social media"
-                                />
-                              </a>
-                              <a
-                                href="https://www.facebook.com/MVTYDham/"
-                                target="_blank"
-                              >
-                                <img src="/icons/face.svg" alt="social media" />
-                              </a>
-                            </div>
-                          </div>
-                          <img
-                            src={toSrc(data.img)}
-                            className="xl:hidden my-7 rounded-4xl"
-                            alt="event"
-                          />
-                        </div>
-                      )}
+                      <FiChevronDown />
+                    </motion.div>
+                  </button>
 
-                      {idx === 1 && (
-                        <div>
-                          <ol
-                            className="h-[220px] list-decimal list-inside pl-2 pb-4\
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        key={`content-${idx}`}
+                        initial="collapsed"
+                        animate="open"
+                        exit="collapsed"
+                        variants={{
+                          open: { opacity: 1, height: "auto" },
+                          collapsed: { opacity: 0, height: 0 },
+                        }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="overflow-hidden"
+                      >
+                        {idx === 0 && (
+                          <div className="pb-2 lg:pb-4 text-neutral-300">
+                            <p className="text-[#FF8127] text-justify w-9/10 xl:text-lg sm:text-center mx-auto xl:mx-0 xl:w-full xl:text-left text-[1.1rem]">
+                              {t("events.p1")}
+                            </p>
+                            <p className="text-center xl:text-left py-3 sm:py-2 lg:py-3 text-[1.1rem] sm:text-[0.9rem]">
+                              {t("events.p2")}
+                            </p>
+                            <a
+                              href={data.url}
+                              target="_blank"
+                              className="px-7 w-fit py-2 mx-auto xl:mx-0 block text-[0.8rem] text-[#FF8127] font-bold rounded-full bg-[#ff8127]/10 hover:bg-[#ff8127]/20 active:bg-[#ff8127]/5 transition ease-in cursor-pointer border-t border-t-white/20 border-l border-l-white/20"
+                            >
+                              {t("events.button")}
+                            </a>
+                            <div className="flex xl:block gap-3 items-center py-3 xl:py-0 mx-auto xl:mx-0 w-fit event">
+                              <p className="py-2 sm:text-sm text-neutral-500">
+                                {t("events.live")}
+                              </p>
+                              <div className="flex gap-3 lg:gap-5 text-[#FF8127] items-end">
+                                <a
+                                  href="https://www.youtube.com/@MVTYDham/streams"
+                                  target="_blank"
+                                >
+                                  <img src="/icons/tv.svg" alt="social media" />
+                                </a>
+                                <a
+                                  href="https://www.youtube.com/@MVTYDham"
+                                  target="_blank"
+                                >
+                                  <img
+                                    src="/icons/youtube.svg"
+                                    alt="social media"
+                                  />
+                                </a>
+                                <a
+                                  href="https://www.instagram.com/mvtydham/"
+                                  target="_blank"
+                                >
+                                  <img
+                                    src="/icons/instagram.svg"
+                                    alt="social media"
+                                  />
+                                </a>
+                                <a
+                                  href="https://www.facebook.com/MVTYDham/"
+                                  target="_blank"
+                                >
+                                  <img
+                                    src="/icons/face.svg"
+                                    alt="social media"
+                                  />
+                                </a>
+                              </div>
+                            </div>
+                            <img
+                              src={toSrc(data.img)}
+                              className="xl:hidden my-7 rounded-4xl"
+                              alt="event"
+                            />
+                          </div>
+                        )}
+
+                        {idx === 1 && (
+                          <div>
+                            <ol
+                              className="h-[220px] list-decimal list-inside pl-2 pb-4\
                              text-neutral-400 space-y-1 overflow-y-scroll  [&::-webkit-scrollbar]:block! [&::-webkit-scrollbar]:w-1!
                              [&::-webkit-scrollbar-thumb]:bg-gray-600!
                                [&::-webkit-scrollbar-thumb]:rounded-full!
                                [&::-webkit-scrollbar-track]:bg-transparent!"
-                          >
-                            {data.upcoming.length === 0 ? (
-                              <li className="text-neutral-500">
-                                No upcoming events.
-                              </li>
-                            ) : (
-                              data.upcoming.map((event, i) => (
-                                <li
-                                  key={i}
-                                  onClick={() => setSelectedUpcoming(i)}
-                                  className={`text-[#FF8127] cursor-pointer py-1 xl:py-0 ps-0 sm:ps-20 xl:ps-0 ${
-                                    selectedUpcoming === i
-                                      ? "opacity-100"
-                                      : "opacity-80"
-                                  }`}
-                                >
-                                  {event.title} ({event.date})
+                            >
+                              {data.upcoming.length === 0 ? (
+                                <li className="text-neutral-500">
+                                  No upcoming events.
                                 </li>
-                              ))
-                            )}
-                          </ol>
+                              ) : (
+                                data.upcoming.map((event, i) => (
+                                  <li
+                                    key={i}
+                                    onClick={() => setSelectedUpcoming(i)}
+                                    className={`text-[#FF8127] cursor-pointer py-1 xl:py-0 ps-0 sm:ps-20 xl:ps-0 ${
+                                      selectedUpcoming === i
+                                        ? "opacity-100"
+                                        : "opacity-80"
+                                    }`}
+                                  >
+                                    {event.title} ({event.date})
+                                  </li>
+                                ))
+                              )}
+                            </ol>
 
-                          <div className="xl:hidden my-7">
-                            {data.upcoming[selectedUpcoming]?.image ? (
-                              <img
-                                src={data.upcoming[selectedUpcoming].image}
-                                alt="upcoming mobile"
-                                className="w-full rounded-4xl object-cover"
-                              />
-                            ) : (
-                              <img
-                                src={toSrc(data.img)}
-                                alt="upcoming placeholder"
-                                className="w-full rounded-4xl object-cover"
-                              />
-                            )}
+                            <div className="xl:hidden my-7">
+                              {data.upcoming[selectedUpcoming]?.image ? (
+                                <img
+                                  src={data.upcoming[selectedUpcoming].image}
+                                  alt="upcoming mobile"
+                                  className="w-full rounded-4xl object-cover"
+                                />
+                              ) : (
+                                <img
+                                  src={toSrc(data.img)}
+                                  alt="upcoming placeholder"
+                                  className="w-full rounded-4xl object-cover"
+                                />
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        )}
 
-                      {idx === 2 && (
-                        <div>
-                          <ol
-                            className="h-[220px] list-decimal list-inside pl-2 pb-4 text-neutral-400 space-y-1 overflow-y-scroll [&::-webkit-scrollbar]:block! [&::-webkit-scrollbar]:w-1!
+                        {idx === 2 && (
+                          <div>
+                            <ol
+                              className="h-[220px] list-decimal list-inside pl-2 pb-4 text-neutral-400 space-y-1 overflow-y-scroll [&::-webkit-scrollbar]:block! [&::-webkit-scrollbar]:w-1!
                              [&::-webkit-scrollbar-thumb]:bg-gray-600!
                                [&::-webkit-scrollbar-thumb]:rounded-full!
                                [&::-webkit-scrollbar-track]:bg-transparent!"
-                          >
-                            {data.past.length === 0 ? (
-                              <li className="text-neutral-500">
-                                No past events.
-                              </li>
-                            ) : (
-                              data.past.map((event, i) => (
-                                <li
-                                  key={i}
-                                  onClick={() => {
-                                    setSelectedPast(i);
-                                    openPastPopup(i);
-                                  }}
-                                  className={`text-[#FF8127] py-1 xl:py-0 cursor-pointer ps-0 sm:ps-20 xl:ps-0 ${
-                                    selectedPast === i
-                                      ? "opacity-100"
-                                      : "opacity-100"
-                                  }`}
-                                >
-                                  {event.title} ({event.date})
+                            >
+                              {data.past.length === 0 ? (
+                                <li className="text-neutral-500">
+                                  No past events.
                                 </li>
-                              ))
-                            )}
-                          </ol>
+                              ) : (
+                                data.past.map((event, i) => (
+                                  <li
+                                    key={i}
+                                    onClick={() => {
+                                      setSelectedPast(i);
+                                      openPastPopup(i);
+                                    }}
+                                    className={`text-[#FF8127] py-1 xl:py-0 cursor-pointer ps-0 sm:ps-20 xl:ps-0 ${
+                                      selectedPast === i
+                                        ? "opacity-100"
+                                        : "opacity-100"
+                                    }`}
+                                  >
+                                    {event.title} ({event.date})
+                                  </li>
+                                ))
+                              )}
+                            </ol>
 
-                          <div className="xl:hidden my-7">
-                            {data.past[selectedPast]?.image ? (
-                              <img
-                                src={data.past[selectedPast].image}
-                                alt="past mobile"
-                                className="w-full rounded-4xl object-cover cursor-pointer"
-                                onClick={() => {
-                                  openPastPopup(selectedPast);
-                                }}
-                              />
-                            ) : (
-                              <img
-                                src={toSrc(data.img)}
-                                alt="past placeholder"
-                                className="w-full rounded-4xl object-cover"
-                              />
-                            )}
+                            <div className="xl:hidden my-7">
+                              {data.past[selectedPast]?.image ? (
+                                <img
+                                  src={data.past[selectedPast].image}
+                                  alt="past mobile"
+                                  className="w-full rounded-4xl object-cover cursor-pointer"
+                                  onClick={() => {
+                                    openPastPopup(selectedPast);
+                                  }}
+                                />
+                              ) : (
+                                <img
+                                  src={toSrc(data.img)}
+                                  alt="past placeholder"
+                                  className="w-full rounded-4xl object-cover"
+                                />
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      )}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            );
-          })}
-        </div>
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
 
-        <div className="hidden xl:block w-full h-fit object-cover">
-          <AnimatePresence mode="wait">
-            <motion.img
-              key={`${openIndex ?? 0}-${selectedUpcoming}-${selectedPast}`}
-              src={rightImageSrc}
-              alt="dham events images"
-              className="rounded-2xl w-full object-cover h-[400px]"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-            />
-          </AnimatePresence>
-        </div>
-      </div>
-
-      <BlurPopup isOpen={isPopupOpen} setIsOpen={setIsPopupOpen}>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          {popupImages.length === 0 ? (
-            <p className="text-center text-neutral-400 col-span-full">
-              No images available
-            </p>
-          ) : (
-            popupImages.map((img, i) => (
-              <img
-                key={i}
-                src={img.url}
-                className="w-full h-full object-cover rounded-xl cursor-pointer"
-                alt={`gallery ${i}`}
-                onClick={() => {
-                  setViewerIndex(i);
-                  setIsViewerOpen(true);
-                }}
+          <div className="hidden xl:block w-full h-fit object-cover">
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={`${openIndex ?? 0}-${selectedUpcoming}-${selectedPast}`}
+                src={rightImageSrc}
+                alt="dham events images"
+                className="rounded-2xl w-full object-cover h-[400px]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
               />
-            ))
-          )}
+            </AnimatePresence>
+          </div>
         </div>
-      </BlurPopup>
 
-      <AnimatePresence>
-        {isViewerOpen && (
-          <Dialog
-            as="div"
-            open={isViewerOpen}
-            onClose={() => setIsViewerOpen(false)}
-            className="fixed inset-0 z-100 flex items-center justify-center"
-          >
-            <motion.div
-              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            />
+        <BlurPopup isOpen={isPopupOpen} setIsOpen={setIsPopupOpen}>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            {popupImages.length === 0 ? (
+              <p className="text-center text-neutral-400 col-span-full">
+                No images available
+              </p>
+            ) : (
+              popupImages.map((img, i) => (
+                <img
+                  key={i}
+                  src={img.url}
+                  className="w-full h-full object-cover rounded-xl cursor-pointer"
+                  alt={`gallery ${i}`}
+                  onClick={() => {
+                    setViewerIndex(i);
+                    setIsViewerOpen(true);
+                  }}
+                />
+              ))
+            )}
+          </div>
+        </BlurPopup>
 
-            <motion.img
-              key={viewerIndex}
-              src={popupImages[viewerIndex]?.url}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.25 }}
-              className="relative z-120 max-w-[90vw] max-h-[90vh] object-contain rounded-xl"
-            />
-            <button
-              onClick={prevImage}
-              className="absolute left-5 top-1/2 -translate-y-1/2 z-130 cursor-pointer hover:text-gray-300 text-white p-2 rounded-full text-3xl"
+        <AnimatePresence>
+          {isViewerOpen && (
+            <Dialog
+              as="div"
+              open={isViewerOpen}
+              onClose={() => setIsViewerOpen(false)}
+              className="fixed inset-0 z-100 flex items-center justify-center"
             >
-              <FaCaretLeft />
-            </button>
+              <motion.div
+                className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              />
 
-            <button
-              onClick={nextImage}
-              className="absolute right-5 top-1/2 -translate-y-1/2 z-130 cursor-pointer hover:text-gray-300 text-white p-2 rounded-full text-3xl"
-            >
-              <FaCaretRight />
-            </button>
+              <motion.img
+                key={viewerIndex}
+                src={popupImages[viewerIndex]?.url}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.25 }}
+                className="relative z-120 max-w-[90vw] max-h-[90vh] object-contain rounded-xl"
+              />
+              <button
+                onClick={prevImage}
+                className="absolute left-5 top-1/2 -translate-y-1/2 z-130 cursor-pointer hover:text-gray-300 text-white p-2 rounded-full text-3xl"
+              >
+                <FaCaretLeft />
+              </button>
 
-            <button
-              onClick={() => setIsViewerOpen(false)}
-              className="absolute top-5 right-5 z-130 bg-white text-black p-2 rounded-full text-2xl"
-            >
-              <IoClose />
-            </button>
-          </Dialog>
-        )}
-      </AnimatePresence>
+              <button
+                onClick={nextImage}
+                className="absolute right-5 top-1/2 -translate-y-1/2 z-130 cursor-pointer hover:text-gray-300 text-white p-2 rounded-full text-3xl"
+              >
+                <FaCaretRight />
+              </button>
+
+              <button
+                onClick={() => setIsViewerOpen(false)}
+                className="absolute top-5 right-5 z-130 bg-white text-black p-2 rounded-full text-2xl"
+              >
+                <IoClose />
+              </button>
+            </Dialog>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 };

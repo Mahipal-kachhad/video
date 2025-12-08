@@ -19,6 +19,7 @@ import MainEntry from "@/components/pillars/3dPillars/MainEntry";
 import ScrollToTop from "@/components/mvty/ScrollToTop";
 import Gallery from "@/components/gallary/Gallery";
 import Chat from "@/components/chat/Chat";
+import Symbols from "@/components/symbols/Symbols";
 
 export default async function HomePage({
   params,
@@ -30,7 +31,7 @@ export default async function HomePage({
   setRequestLocale(locale);
   return (
     <>
-      {/* <VideoGalaxy /> */}
+      <VideoGalaxy />
       <div className="bg-[#1D1D1F] min-h-screen">
         <AboutMVTY />
         <MaaVishvambhari />
@@ -42,6 +43,7 @@ export default async function HomePage({
         <Dham2 />
         <MainEntry />
         <Gallery />
+        <Symbols />
         <Events />
         <Quotes />
         <Darshan />
