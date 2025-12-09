@@ -267,7 +267,12 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
           onPointerDown={handleUIInteraction}
         >
           <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            onClick={() => {
+              const newState = !isSidebarOpen;
+              setIsSidebarOpen(newState);
+              // If opening sidebar, close info panel
+              if (newState) setIsInfoOpen(false);
+            }}
             className={iconStyle}
             title={isSidebarOpen ? "Close Menu" : "Open Menu"}
           >
@@ -318,7 +323,12 @@ const SceneContent = ({ data }: { data: SceneDataMap }) => {
           onPointerDown={handleUIInteraction}
         >
           <button
-            onClick={() => setIsInfoOpen(!isInfoOpen)}
+            onClick={() => {
+              const newState = !isInfoOpen;
+              setIsInfoOpen(newState);
+              // If opening info panel, close sidebar
+              if (newState) setIsSidebarOpen(false);
+            }}
             className={iconStyle}
             title="Toggle Info"
           >
